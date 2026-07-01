@@ -1,0 +1,67 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * Cyber-SOC dark theme. shadcn-style CSS variables (HSL triplets) so all UI
+ * primitives inherit the palette. Matches the original prototype:
+ *   void #060B17 · cyan #22D3EE · red #F43F5E · orange #F97316 · amber #EAB308 · green #22C55E
+ */
+@layer base {
+  :root {
+    --background: 222 60% 6%;          /* #060B17 void */
+    --foreground: 213 31% 91%;         /* #E2E8F0 */
+
+    --card: 223 56% 9%;                /* #091024 glass panel */
+    --card-foreground: 213 31% 91%;
+
+    --primary: 187 84% 53%;            /* #22D3EE cyber cyan */
+    --primary-foreground: 222 60% 6%;
+
+    --secondary: 215 40% 16%;
+    --secondary-foreground: 213 31% 91%;
+
+    --muted: 217 33% 14%;
+    --muted-foreground: 215 16% 57%;   /* #64748B-ish */
+
+    --accent: 215 40% 16%;
+    --accent-foreground: 187 84% 53%;
+
+    --destructive: 350 89% 60%;        /* #F43F5E */
+    --destructive-foreground: 0 0% 100%;
+
+    --ok: 142 71% 45%;                 /* #22C55E */
+
+    --sev-critical: 350 89% 60%;       /* #F43F5E */
+    --sev-high: 25 95% 53%;            /* #F97316 */
+    --sev-medium: 45 93% 47%;          /* #EAB308 */
+    --sev-low: 187 84% 53%;            /* cyan */
+    --sev-info: 215 16% 47%;           /* slate */
+
+    --border: 199 80% 30% / 0.18;      /* cyan-tinted hairline (fallback below) */
+    --border: 200 50% 24%;
+    --input: 200 50% 24%;
+    --ring: 187 84% 53%;
+
+    --radius: 0.625rem;
+  }
+}
+
+@layer base {
+  * { @apply border-border; }
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
+    background-image:
+      radial-gradient(circle at 15% 0%, hsl(187 84% 53% / 0.05), transparent 40%),
+      radial-gradient(circle at 85% 100%, hsl(187 84% 53% / 0.04), transparent 40%);
+    background-attachment: fixed;
+  }
+}
+
+@layer components {
+  /* Glassmorphism panel — the signature surface */
+  .glass {
+    @apply bg-card/90 border border-border rounded-lg backdrop-blur-sm;
+  }
+}

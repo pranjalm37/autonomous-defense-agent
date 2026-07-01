@@ -1,0 +1,22 @@
+[
+  {
+    "name": "APT-DEMO-BEAR",
+    "aliases": ["DemoBear", "TG-1001"],
+    "description": "Simulated nation-state actor specializing in credential theft and long-dwell espionage. Uses Cobalt Strike for C2 and lives off the land.",
+    "motivation": "espionage",
+    "mitre_techniques": ["T1110", "T1078", "T1071.001", "T1059.001"],
+    "associated_ips": ["45.77.12.9", "203.0.113.66"],
+    "associated_hashes": ["e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"],
+    "associated_domains": ["evil.example.com"]
+  },
+  {
+    "name": "CRIMSON-STUFFER",
+    "aliases": ["StufferCrew"],
+    "description": "Simulated cybercrime crew running large-scale credential-stuffing operations against web logins, monetizing valid accounts.",
+    "motivation": "financial",
+    "mitre_techniques": ["T1110.004", "T1078"],
+    "associated_ips": ["198.51.100.23"],
+    "associated_hashes": [],
+    "associated_domains": []
+  }
+]

@@ -1,0 +1,30 @@
+title: SSH Brute Force Attempt
+id: 4d1b2c3a-0001-4a1b-9c2d-aada00000001
+status: stable
+description: Detects many failed SSH authentications from a single source within a short window, indicating a brute-force attack.
+references:
+  - https://attack.mitre.org/techniques/T1110/
+author: AADA
+date: 2026/01/10
+logsource:
+  product: linux
+  service: sshd
+detection:
+  selection:
+    event_type:
+      - ssh_login_failed
+      - ssh_invalid_user
+  timeframe: 60s
+  condition: selection | count() by source_ip >= 5
+fields:
+  - source_ip
+  - username
+  - hostname
+falsepositives:
+  - Misconfigured automation using stale credentials
+  - Users who forgot their password
+level: high
+tags:
+  - attack.credential_access
+  - attack.t1110
+  - attack.t1110.001

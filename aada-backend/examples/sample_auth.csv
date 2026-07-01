@@ -1,0 +1,8 @@
+timestamp,event_type,severity,src_ip,hostname,user,outcome,detail
+2026-01-10T13:50:01Z,login_failed,medium,203.0.113.66,auth-gw-01,admin,failure,bad password
+2026-01-10T13:50:04Z,login_failed,medium,203.0.113.66,auth-gw-01,admin,failure,bad password
+2026-01-10T13:50:07Z,login_failed,medium,203.0.113.66,auth-gw-01,root,failure,bad password
+2026-01-10T13:50:12Z,login_failed,high,203.0.113.66,auth-gw-01,root,failure,account locked
+2026-01-10T13:52:45Z,login_success,info,10.20.4.55,auth-gw-01,deploy,success,key auth
+2026-01-10T14:05:33Z,mfa_challenge,low,10.20.4.55,auth-gw-01,deploy,success,totp ok
+2026-01-10T14:09:10Z,password_reset,medium,10.20.4.55,auth-gw-01,jdoe,success,self-service

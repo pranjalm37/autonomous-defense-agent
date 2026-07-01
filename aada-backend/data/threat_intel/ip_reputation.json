@@ -1,0 +1,34 @@
+[
+  {
+    "ip": "203.0.113.66",
+    "score": 92,
+    "categories": ["brute_force", "ssh_scanner", "anonymizer"],
+    "sources": ["AbuseIPDB", "internal_honeypot"],
+    "last_seen": "2026-01-10",
+    "notes": "Repeated SSH brute-force activity against multiple tenants."
+  },
+  {
+    "ip": "198.51.100.23",
+    "score": 85,
+    "categories": ["credential_stuffing", "web_scanner"],
+    "sources": ["AbuseIPDB", "GreyNoise"],
+    "last_seen": "2026-01-10",
+    "notes": "Distributed credential-stuffing and path enumeration."
+  },
+  {
+    "ip": "45.77.12.9",
+    "score": 97,
+    "categories": ["c2", "cobalt_strike"],
+    "sources": ["ThreatFox", "internal_ids"],
+    "last_seen": "2026-01-09",
+    "notes": "Confirmed Cobalt Strike command-and-control server."
+  },
+  {
+    "ip": "8.8.8.8",
+    "score": 0,
+    "categories": ["benign", "public_dns"],
+    "sources": ["allowlist"],
+    "last_seen": "2026-01-10",
+    "notes": "Google Public DNS."
+  }
+]

@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+
+# Local env / secrets — never bake into the image
+.env
+.env.*
+!.env.example
+
+# Dev artifacts
+.git/
+.gitignore
+tests/
+.chroma/
+*.sqlite3
+.DS_Store

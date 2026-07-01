@@ -1,0 +1,30 @@
+title: Encoded PowerShell Command
+id: 4d1b2c3a-0002-4a1b-9c2d-aada00000002
+status: stable
+description: Detects PowerShell launched with an encoded or obfuscated command line, a common malware and post-exploitation technique.
+references:
+  - https://attack.mitre.org/techniques/T1059/001/
+author: AADA
+date: 2026/01/10
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection_img:
+    process|endswith: '\powershell.exe'
+  selection_flag:
+    command_line|contains:
+      - '-enc'
+      - '-EncodedCommand'
+      - 'FromBase64String'
+  condition: selection_img and selection_flag
+fields:
+  - parent_process
+  - process
+  - command_line
+falsepositives:
+  - Legitimate administrative scripts that encode parameters
+level: high
+tags:
+  - attack.execution
+  - attack.t1059.001

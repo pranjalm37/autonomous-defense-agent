@@ -1,0 +1,72 @@
+[
+  {
+    "id": "A01:2021",
+    "name": "Broken Access Control",
+    "description": "Restrictions on what authenticated users are allowed to do are often not properly enforced. Attackers can exploit these flaws to access unauthorized functionality or data, such as other users' accounts, sensitive files, or admin functions.",
+    "example": "An attacker changes the `account_id` parameter in an API request to view another user's records (insecure direct object reference). Missing function-level checks let a normal user call an admin-only endpoint.",
+    "prevention": "Deny by default, enforce access control server-side, use role/attribute checks on every request, invalidate sessions on logout, and rate-limit APIs. Log access-control failures and alert on repeated denials."
+  },
+  {
+    "id": "A02:2021",
+    "name": "Cryptographic Failures",
+    "description": "Failures related to cryptography (or its absence) that lead to exposure of sensitive data. This includes transmitting data in clear text, using weak or deprecated algorithms, and poor key management.",
+    "example": "Passwords stored with unsalted MD5, or sensitive data sent over plain HTTP, allowing interception and offline cracking.",
+    "prevention": "Encrypt data in transit (TLS 1.2+) and at rest, use strong adaptive hashing (bcrypt/argon2) for passwords, manage keys in a vault, and disable legacy protocols and ciphers."
+  },
+  {
+    "id": "A03:2021",
+    "name": "Injection",
+    "description": "User-supplied data is sent to an interpreter as part of a command or query without proper validation or escaping. SQL, NoSQL, OS command, and LDAP injection allow attackers to read, modify, or destroy data and sometimes execute commands.",
+    "example": "A login form builds `SELECT * FROM users WHERE name='\" + input + \"'`; the attacker submits `' OR 1=1--` to bypass authentication. Tools like sqlmap automate exploitation.",
+    "prevention": "Use parameterized queries / prepared statements, ORM bindings, input allow-listing, and least-privilege database accounts. A WAF can blunt automated injection scanning."
+  },
+  {
+    "id": "A04:2021",
+    "name": "Insecure Design",
+    "description": "Missing or ineffective security controls baked into the architecture. Distinct from implementation bugs, insecure design cannot be fixed by perfect coding because the threat model was never addressed.",
+    "example": "A password-reset flow that relies only on knowledge-based questions, allowing account takeover via researched answers.",
+    "prevention": "Use threat modeling, secure design patterns and reference architectures, establish a secure development lifecycle, and write abuse-case tests alongside feature tests."
+  },
+  {
+    "id": "A05:2021",
+    "name": "Security Misconfiguration",
+    "description": "Insecure default configurations, incomplete setups, open cloud storage, verbose error messages, or unpatched systems. Misconfiguration is one of the most common root causes of breaches.",
+    "example": "A cloud storage bucket left world-readable, or a server exposing a stack trace and the `.git` directory or `.env` file to the internet.",
+    "prevention": "Harden by default, automate configuration with reviewed infrastructure-as-code, remove unused features, segment networks, and continuously scan for drift and exposed secrets."
+  },
+  {
+    "id": "A06:2021",
+    "name": "Vulnerable and Outdated Components",
+    "description": "Using libraries, frameworks, or other software modules with known vulnerabilities, or that are unmaintained, exposes the application to exploitation of those flaws.",
+    "example": "An app pinned to a Log4j version vulnerable to Log4Shell, exploited via a crafted log message that triggers remote code execution.",
+    "prevention": "Maintain a software bill of materials (SBOM), continuously scan dependencies (SCA), patch promptly, and remove unused dependencies."
+  },
+  {
+    "id": "A07:2021",
+    "name": "Identification and Authentication Failures",
+    "description": "Weaknesses in confirming user identity, authentication, and session management. This permits credential stuffing, brute force, and session hijacking.",
+    "example": "An API with no rate limiting allows attackers to replay millions of breached credentials (credential stuffing) until some succeed.",
+    "prevention": "Require MFA, rate-limit and lock out after failures, use secure session handling, check passwords against breach corpora, and avoid default credentials."
+  },
+  {
+    "id": "A08:2021",
+    "name": "Software and Data Integrity Failures",
+    "description": "Code and infrastructure that do not protect against integrity violations, such as relying on plugins or CI/CD pipelines from untrusted sources, or insecure deserialization.",
+    "example": "A build pipeline pulls an unverified dependency that has been backdoored (supply-chain compromise), shipping malware to all users.",
+    "prevention": "Verify signatures on software and updates, use trusted repositories, secure the CI/CD pipeline, and avoid insecure deserialization of untrusted data."
+  },
+  {
+    "id": "A09:2021",
+    "name": "Security Logging and Monitoring Failures",
+    "description": "Insufficient logging, monitoring, and alerting lets attackers operate undetected. Without an audit trail, incident response and forensics are crippled.",
+    "example": "Login failures and high-value actions are not logged, so a months-long breach goes unnoticed until data appears for sale.",
+    "prevention": "Log authentication, access-control, and server-side input failures with sufficient context; centralize logs; alert on suspicious patterns; and ensure logs are tamper-evident and retained."
+  },
+  {
+    "id": "A10:2021",
+    "name": "Server-Side Request Forgery (SSRF)",
+    "description": "SSRF flaws occur when a web application fetches a remote resource without validating the user-supplied URL, letting an attacker coerce the server into making requests to unintended internal destinations.",
+    "example": "An image-fetch feature is abused to request `http://169.254.169.254/` and retrieve cloud metadata credentials.",
+    "prevention": "Validate and allow-list outbound URLs, block requests to internal/link-local ranges, disable unused URL schemes, and isolate the fetching service from sensitive internal endpoints."
+  }
+]

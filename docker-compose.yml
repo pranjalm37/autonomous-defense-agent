@@ -1,0 +1,101 @@
+# ============================================================
+# AADA — full-stack deployment
+#   db        PostgreSQL 16      (schema created from schema.sql on first boot)
+#   chroma    ChromaDB           (vector store for the RAG knowledge base)
+#   backend   FastAPI + uvicorn  (the autonomous defense agent API)
+#   frontend  nginx + React SPA  (proxies /api → backend)
+#
+#   Quickstart:  cp .env.example .env  &&  docker compose up -d --build
+#   Frontend:    http://localhost:8080      API docs: http://localhost:8000/docs
+# ============================================================
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-aada}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-secret}
+      POSTGRES_DB: ${POSTGRES_DB:-aada_db}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      # Schema is created by the backend from the ORM models on startup
+      # (Base.metadata.create_all) — the single source of truth. schema.sql is kept
+      # as reference documentation only. Roles are seeded by the backend lifespan.
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-aada} -d ${POSTGRES_DB:-aada_db}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    networks: [aada]
+
+  chroma:
+    image: chromadb/chroma:0.5.23   # must match the chromadb client pinned in pyproject
+    restart: unless-stopped
+    environment:
+      IS_PERSISTENT: "TRUE"
+      ANONYMIZED_TELEMETRY: "FALSE"
+    volumes:
+      - chromadata:/chroma/chroma
+    healthcheck:
+      # The chroma image is python-based (no curl); probe its heartbeat with urllib.
+      test: ["CMD", "python", "-c", "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://localhost:8000/api/v1/heartbeat',timeout=3).status==200 else 1)"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks: [aada]
+
+  backend:
+    build:
+      context: ./aada-backend
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+      chroma:
+        condition: service_started
+    environment:
+      DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-aada}:${POSTGRES_PASSWORD:-secret}@db:5432/${POSTGRES_DB:-aada_db}
+      SECRET_KEY: ${SECRET_KEY:?set SECRET_KEY in .env (openssl rand -hex 32)}
+      APP_ENV: ${APP_ENV:-production}
+      LOG_FORMAT: ${LOG_FORMAT:-json}
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      ALLOWED_HOSTS: "*"
+      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS:-http://localhost:8080}
+      # AI / RAG
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      CHROMA_HOST: chroma
+      CHROMA_PORT: "8000"
+      RAG_COLLECTION: ${RAG_COLLECTION:-aada_knowledge}
+      # Threat-intel integrations (optional)
+      VIRUSTOTAL_API_KEY: ${VIRUSTOTAL_API_KEY:-}
+      ABUSEIPDB_API_KEY: ${ABUSEIPDB_API_KEY:-}
+      NVD_API_KEY: ${NVD_API_KEY:-}
+      # Auth seeding (bootstrap admin so you can log in)
+      AUTO_SEED: "true"
+      DEFAULT_ADMIN_EMAIL: ${DEFAULT_ADMIN_EMAIL:-admin@aada.io}
+      DEFAULT_ADMIN_PASSWORD: ${DEFAULT_ADMIN_PASSWORD:?set DEFAULT_ADMIN_PASSWORD in .env}
+      UVICORN_WORKERS: ${UVICORN_WORKERS:-2}
+    ports:
+      - "${BACKEND_PORT:-8000}:8000"   # exposed for /docs; the SPA uses the nginx proxy
+    networks: [aada]
+
+  frontend:
+    build:
+      context: ./aada-frontend
+      args:
+        VITE_API_BASE: /api/v1
+    restart: unless-stopped
+    depends_on:
+      backend:
+        condition: service_started
+    ports:
+      - "${FRONTEND_PORT:-8080}:80"
+    networks: [aada]
+
+volumes:
+  pgdata:
+  chromadata:
+
+networks:
+  aada:
+    driver: bridge

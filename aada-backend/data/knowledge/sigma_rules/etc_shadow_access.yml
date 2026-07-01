@@ -1,0 +1,32 @@
+title: Sensitive File Access via Sudo (/etc/shadow)
+id: 4d1b2c3a-0003-4a1b-9c2d-aada00000003
+status: experimental
+description: Detects a sudo command that reads the shadow password file, indicating credential dumping or privilege-escalation reconnaissance.
+references:
+  - https://attack.mitre.org/techniques/T1003/
+  - https://attack.mitre.org/techniques/T1548/003/
+author: AADA
+date: 2026/01/10
+logsource:
+  product: linux
+  service: auth
+detection:
+  selection:
+    event_type: sudo_command
+    target_user: root
+    command|contains:
+      - '/etc/shadow'
+      - '/etc/gshadow'
+  condition: selection
+fields:
+  - username
+  - command
+  - hostname
+falsepositives:
+  - Backup or account-audit tooling run by administrators
+level: critical
+tags:
+  - attack.credential_access
+  - attack.t1003
+  - attack.privilege_escalation
+  - attack.t1548.003

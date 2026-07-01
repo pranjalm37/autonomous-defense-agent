@@ -1,0 +1,57 @@
+[
+  {
+    "id": "CVE-2021-44228",
+    "name": "Log4Shell",
+    "cvss": 10.0,
+    "severity": "critical",
+    "products": ["log4j", "apache log4j", "java"],
+    "description": "Apache Log4j2 JNDI features used in configuration, log messages, and parameters do not protect against attacker-controlled LDAP and other JNDI related endpoints, allowing remote code execution via a crafted log string.",
+    "references": ["https://nvd.nist.gov/vuln/detail/CVE-2021-44228"],
+    "published": "2021-12-10",
+    "exploited_in_wild": true
+  },
+  {
+    "id": "CVE-2024-3094",
+    "name": "XZ Utils Backdoor",
+    "cvss": 10.0,
+    "severity": "critical",
+    "products": ["xz", "liblzma", "openssh"],
+    "description": "Malicious code was discovered in the upstream tarballs of xz (liblzma) starting with 5.6.0, introducing a backdoor that can allow remote code execution by interfering with sshd authentication.",
+    "references": ["https://nvd.nist.gov/vuln/detail/CVE-2024-3094"],
+    "published": "2024-03-29",
+    "exploited_in_wild": false
+  },
+  {
+    "id": "CVE-2014-0160",
+    "name": "Heartbleed",
+    "cvss": 7.5,
+    "severity": "high",
+    "products": ["openssl", "tls"],
+    "description": "The TLS heartbeat extension in OpenSSL 1.0.1 before 1.0.1g allows remote attackers to read sensitive memory contents, potentially exposing private keys and credentials.",
+    "references": ["https://nvd.nist.gov/vuln/detail/CVE-2014-0160"],
+    "published": "2014-04-07",
+    "exploited_in_wild": true
+  },
+  {
+    "id": "CVE-2023-38408",
+    "name": "OpenSSH ssh-agent RCE",
+    "cvss": 9.8,
+    "severity": "critical",
+    "products": ["openssh", "ssh-agent"],
+    "description": "A flaw in the PKCS#11 feature of OpenSSH's ssh-agent allows remote code execution if an agent is forwarded to an attacker-controlled host with specific libraries present.",
+    "references": ["https://nvd.nist.gov/vuln/detail/CVE-2023-38408"],
+    "published": "2023-07-19",
+    "exploited_in_wild": false
+  },
+  {
+    "id": "CVE-2022-0778",
+    "name": "OpenSSL BN_mod_sqrt DoS",
+    "cvss": 7.5,
+    "severity": "high",
+    "products": ["openssl"],
+    "description": "The BN_mod_sqrt function can be tricked into an infinite loop when parsing a malformed certificate, causing a denial of service.",
+    "references": ["https://nvd.nist.gov/vuln/detail/CVE-2022-0778"],
+    "published": "2022-03-15",
+    "exploited_in_wild": false
+  }
+]

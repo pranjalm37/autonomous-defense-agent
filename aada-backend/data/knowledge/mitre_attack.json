@@ -1,0 +1,74 @@
+[
+  {
+    "id": "T1110",
+    "name": "Brute Force",
+    "tactic": "Credential Access",
+    "tactic_id": "TA0006",
+    "description": "Adversaries may use brute force techniques to gain access to accounts when passwords are unknown or when password hashes are obtained. Without knowledge of the password, an adversary systematically guesses the password using a repetitive or iterative mechanism.",
+    "detection": "Monitor authentication logs for many failed login attempts from a single source within a short window. Correlate a burst of failures followed by a success from the same source IP as a likely account compromise. Alert on logins from anonymizing infrastructure.",
+    "mitigation": "Enforce account lockout policies, multi-factor authentication, and strong password requirements. Rate-limit authentication endpoints and block source IPs after repeated failures."
+  },
+  {
+    "id": "T1110.004",
+    "name": "Brute Force: Credential Stuffing",
+    "tactic": "Credential Access",
+    "tactic_id": "TA0006",
+    "description": "Adversaries may use credentials obtained from breach dumps of unrelated accounts to gain access. Because users frequently reuse passwords, an attacker replays large lists of username/password pairs, expecting some fraction to succeed.",
+    "detection": "Look for authentication failures spanning many distinct usernames from a single source, with few attempts per account. High username cardinality with low per-account attempts distinguishes stuffing from classic brute force.",
+    "mitigation": "Deploy MFA, monitor for and block known breached credentials, use device fingerprinting and bot-detection on login flows."
+  },
+  {
+    "id": "T1046",
+    "name": "Network Service Discovery",
+    "tactic": "Discovery",
+    "tactic_id": "TA0007",
+    "description": "Adversaries may attempt to get a listing of services running on remote hosts and local network infrastructure, including those that may be vulnerable to remote software exploitation. Methods include port and vulnerability scanning.",
+    "detection": "Detect a single source connecting to many distinct ports (vertical scan) or many hosts on the same port (horizontal scan) within a short window. Firewall deny logs and IDS connection events are strong inputs.",
+    "mitigation": "Use network segmentation, disable unused services, and deploy network intrusion detection to identify and rate-limit scanning behavior."
+  },
+  {
+    "id": "T1078",
+    "name": "Valid Accounts",
+    "tactic": "Defense Evasion",
+    "tactic_id": "TA0005",
+    "description": "Adversaries may obtain and abuse credentials of existing accounts as a means of gaining Initial Access, Persistence, Privilege Escalation, or Defense Evasion. Compromised credentials may bypass access controls and blend in with legitimate activity.",
+    "detection": "Baseline normal login geography and timing per account. Flag impossible-travel (logins from distant locations within an impossible interval), logins at unusual hours, or from new devices and ASNs.",
+    "mitigation": "Enforce MFA, apply conditional access policies, rotate credentials on suspicion of compromise, and monitor privileged account usage closely."
+  },
+  {
+    "id": "T1548.003",
+    "name": "Abuse Elevation Control Mechanism: Sudo and Sudo Caching",
+    "tactic": "Privilege Escalation",
+    "tactic_id": "TA0004",
+    "description": "Adversaries may perform sudo or exploit sudo caching to execute commands with elevated privileges. Misconfigured sudoers entries or cached credentials can allow a low-privileged user to run commands as root.",
+    "detection": "Audit sudo invocations, especially those targeting root that read sensitive files (/etc/shadow), modify the sudoers file, set setuid bits, or spawn shells. Alert on repeated failed su/sudo attempts.",
+    "mitigation": "Apply least privilege in sudoers, require re-authentication (remove NOPASSWD), set the sudo timeout to zero for sensitive accounts, and monitor sudo logs centrally."
+  },
+  {
+    "id": "T1059.001",
+    "name": "Command and Scripting Interpreter: PowerShell",
+    "tactic": "Execution",
+    "tactic_id": "TA0002",
+    "description": "Adversaries may abuse PowerShell for execution. PowerShell can download and run code in memory, and supports encoded commands that obfuscate intent. It is commonly launched by malicious Office macros.",
+    "detection": "Enable PowerShell script-block and module logging. Alert on encoded commands (-EncodedCommand/-enc), download cradles (Net.WebClient, IEX), and Office applications spawning powershell.exe.",
+    "mitigation": "Use Constrained Language Mode, application control (WDAC/AppLocker), and disable PowerShell v2. Restrict macro execution from the internet."
+  },
+  {
+    "id": "T1071.001",
+    "name": "Application Layer Protocol: Web Protocols",
+    "tactic": "Command and Control",
+    "tactic_id": "TA0011",
+    "description": "Adversaries may communicate using application layer protocols such as HTTP/HTTPS to blend C2 traffic with normal web traffic. Beacons periodically check in to a controller for tasking.",
+    "detection": "Detect periodic beaconing (regular-interval connections), connections to known-bad C2 infrastructure, and signature hits for frameworks like Cobalt Strike. Inspect TLS metadata (JA3) and rare destination ASNs.",
+    "mitigation": "Use network intrusion prevention, threat-intel-driven egress filtering and DNS sinkholing, and TLS inspection where policy permits."
+  },
+  {
+    "id": "T1003",
+    "name": "OS Credential Dumping",
+    "tactic": "Credential Access",
+    "tactic_id": "TA0006",
+    "description": "Adversaries may attempt to dump credentials to obtain account login and credential material, normally in the form of hashes or clear-text passwords, from the operating system and software. Targets include /etc/shadow, LSASS memory, and the SAM database.",
+    "detection": "Alert on access to /etc/shadow, reads of LSASS memory, and use of tools such as Mimikatz. Correlate credential-access events with subsequent lateral movement.",
+    "mitigation": "Enable Credential Guard, restrict debug privileges, store secrets in protected vaults, and apply least privilege so credential stores are unreadable to normal users."
+  }
+]

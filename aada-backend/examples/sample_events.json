@@ -1,0 +1,54 @@
+[
+  {
+    "source": "edr",
+    "event_id": "edr-90a1",
+    "event_type": "process_creation",
+    "severity": "high",
+    "timestamp": "2026-01-10T13:55:36Z",
+    "host": "WIN-FINANCE-07",
+    "user": "jdoe",
+    "src_ip": "10.20.4.18",
+    "process": "powershell.exe",
+    "command_line": "powershell -enc SQBFAFgA...",
+    "parent_process": "winword.exe"
+  },
+  {
+    "source": "firewall",
+    "event_id": "fw-1188",
+    "action": "deny",
+    "severity": 3,
+    "@timestamp": 1768053336,
+    "src": "203.0.113.66",
+    "dst": "10.20.4.18",
+    "dport": 3389,
+    "protocol": "tcp",
+    "rule": "block-external-rdp"
+  },
+  {
+    "source": "cloud",
+    "event_type": "console_login",
+    "severity": "critical",
+    "time": "2026-01-10T14:01:09Z",
+    "user.name": "root",
+    "clientip": "198.51.100.23",
+    "outcome": "success",
+    "mfa_used": false,
+    "aws_region": "us-east-1"
+  },
+  {
+    "source": "ids",
+    "signature": "ET TROJAN Cobalt Strike Beacon",
+    "severity": "critical",
+    "timestamp": "2026-01-10T14:03:51Z",
+    "source.ip": "10.20.4.18",
+    "destination.ip": "45.77.12.9",
+    "destination.port": 443
+  },
+  {
+    "event_type": "file_quarantine",
+    "host": "WIN-FINANCE-07",
+    "user": "jdoe",
+    "file_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_path": "C:\\Users\\jdoe\\Downloads\\invoice.scr"
+  }
+]
