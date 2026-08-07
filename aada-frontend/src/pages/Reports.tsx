@@ -31,7 +31,7 @@ export default function Reports() {
 
       {generate.isPending && (
         <Card><CardContent className="flex items-center gap-2 py-4 text-sm text-primary">
-          <Sparkles className="size-4 animate-pulse-glow" /> Generating report…
+          <Sparkles className="size-4 animate-pulse" /> Generating report…
         </CardContent></Card>
       )}
 

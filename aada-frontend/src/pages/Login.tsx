@@ -31,17 +31,7 @@ export default function Login() {
 
   return (
     <div className="flex min-h-screen items-center justify-center p-4">
-      {/* Hexagonal grid backdrop — a nod to network topology */}
-      <svg className="pointer-events-none absolute inset-0 h-full w-full opacity-[0.06]" aria-hidden>
-        <defs>
-          <pattern id="hex" width="40" height="46" patternUnits="userSpaceOnUse" patternTransform="scale(1.5)">
-            <path d="M20 0 L40 11.5 L40 34.5 L20 46 L0 34.5 L0 11.5 Z" fill="none" stroke="hsl(187 84% 53%)" strokeWidth="0.5" />
-          </pattern>
-        </defs>
-        <rect width="100%" height="100%" fill="url(#hex)" />
-      </svg>
-
-      <Card className="z-10 w-full max-w-sm">
+      <Card className="w-full max-w-sm">
         <CardContent className="p-7">
           <div className="mb-6 text-center">
             <Shield className="mx-auto mb-2 size-10 text-primary" />
