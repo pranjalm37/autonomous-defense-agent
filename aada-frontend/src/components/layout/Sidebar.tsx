@@ -1,10 +1,11 @@
 import { NavLink } from "react-router-dom";
-import { Activity, FileText, ScrollText, Search, Settings, Shield } from "lucide-react";
+import { Activity, Crosshair, FileText, ScrollText, Search, Settings, Shield } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAlerts, useActions } from "@/hooks/queries";
 
 const NAV = [
   { to: "/", label: "Triage", icon: Activity, end: true },
+  { to: "/simulator", label: "Simulator", icon: Crosshair },
   { to: "/alerts", label: "Alerts", icon: ScrollText },
   { to: "/investigations", label: "Investigate", icon: Search },
   { to: "/reports", label: "Reports", icon: FileText },

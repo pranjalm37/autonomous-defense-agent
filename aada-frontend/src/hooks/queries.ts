@@ -108,3 +108,20 @@ export const useAuditLogs = (filters?: { action?: string; limit?: number }) =>
 
 export const useRules = () =>
   useQuery({ queryKey: keys.rules(), queryFn: () => api.listRules() });
+
+// ── Attack simulator ──
+export const useScenarios = () =>
+  useQuery({ queryKey: ["scenarios"], queryFn: api.listScenarios, staleTime: Infinity });
+
+export function useRunScenario() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (id: string) => api.runScenario(id),
+    // A run creates events and alerts, so refresh everything the console shows.
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["alerts"] });
+      qc.invalidateQueries({ queryKey: ["events"] });
+      qc.invalidateQueries({ queryKey: ["actions"] });
+    },
+  });
+}

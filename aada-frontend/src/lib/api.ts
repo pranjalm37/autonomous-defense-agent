@@ -9,7 +9,7 @@ import { useAppStore } from "@/store/appStore";
 import type {
   Action, ActionDetail, AIAnalysis, Alert, AlertList, AuditLog, Comment,
   CurrentUser, Decision, DecisionMode, ExecutionResult, IncidentReport,
-  ReportListItem, RuleInfo, SecurityEvent, Token,
+  ReportListItem, RuleInfo, ScenarioInfo, SecurityEvent, SimulationResult, Token,
 } from "@/lib/types";
 
 const BASE = import.meta.env.VITE_API_BASE || "/api/v1";
@@ -115,6 +115,11 @@ export const api = {
   // Audit
   auditLogs: (p?: { action?: string; resource_type?: string; limit?: number }) =>
     request<AuditLog[]>("/audit/logs", { params: p }),
+
+  // Attack simulator
+  listScenarios: () => request<ScenarioInfo[]>("/simulator/scenarios"),
+  runScenario: (id: string) =>
+    request<SimulationResult>(`/simulator/scenarios/${id}/run`, { method: "POST" }),
 
   // Knowledge (RAG)
   knowledgeQuery: (query: string, top_k = 5) =>

@@ -152,3 +152,18 @@ export interface CurrentUser {
   is_mfa_enabled: boolean;
   created_at: string;
 }
+
+// ── Attack simulator ──
+export interface ScenarioInfo {
+  id: string; name: string; description: string; mitre: string;
+  format: string; target: string; expected_rule: string;
+}
+export interface SimulationStage {
+  stage: string; detail: string; ok: boolean; elapsed_ms: number;
+}
+export interface SimulationResult {
+  run_id: string; scenario_id: string; scenario_name: string;
+  events_ingested: number; alerts_created: number; alert_ids: string[];
+  expected_rule: string; expected_rule_fired: boolean;
+  duration_ms: number; stages: SimulationStage[];
+}

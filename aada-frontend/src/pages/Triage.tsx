@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { Check, Play } from "lucide-react";
 import { EventSpine } from "@/components/EventSpine";
+import { SimulatorLauncher } from "@/components/SimulatorLauncher";
 import { useActions, useAlerts, useAnalyzeAlert, useDecideAlert, useEvents, useRunDetection } from "@/hooks/queries";
 import { usePermissions } from "@/hooks/useAuth";
 import { useAppStore } from "@/store/appStore";
@@ -89,6 +90,8 @@ export default function Triage() {
               />
             ))}
           </div>
+
+          <SimulatorLauncher onAlert={setSelected} />
         </section>
 
         {/* ── investigation ──────────────────────────────────── */}
