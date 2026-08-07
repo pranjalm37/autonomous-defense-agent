@@ -65,6 +65,9 @@ services:
       OPENAI_API_KEY: ${OPENAI_API_KEY:-}
       CHROMA_HOST: chroma
       CHROMA_PORT: "8000"
+      # Silence the chroma client's posthog telemetry call, which fails with an
+      # upstream signature mismatch and logs at error level on every RAG request.
+      ANONYMIZED_TELEMETRY: "False"
       RAG_COLLECTION: ${RAG_COLLECTION:-aada_knowledge}
       # Threat-intel integrations (optional)
       VIRUSTOTAL_API_KEY: ${VIRUSTOTAL_API_KEY:-}

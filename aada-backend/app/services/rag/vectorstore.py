@@ -94,12 +94,17 @@ class ChromaVectorStore:
                  persist_dir: str | None = None,
                  host: str | None = None, port: int | None = None):
         import chromadb  # lazy
+        from chromadb.config import Settings
+
+        # Telemetry off explicitly: the client's posthog call fails with an
+        # upstream signature mismatch and logs at error level on every request.
+        settings = Settings(anonymized_telemetry=False)
         if host:
-            self._client = chromadb.HttpClient(host=host, port=port or 8000)
+            self._client = chromadb.HttpClient(host=host, port=port or 8000, settings=settings)
         elif persist_dir:
-            self._client = chromadb.PersistentClient(path=persist_dir)
+            self._client = chromadb.PersistentClient(path=persist_dir, settings=settings)
         else:
-            self._client = chromadb.EphemeralClient()
+            self._client = chromadb.EphemeralClient(settings=settings)
         self._name = collection
         # cosine space to match our similarity measure
         self._col = self._client.get_or_create_collection(

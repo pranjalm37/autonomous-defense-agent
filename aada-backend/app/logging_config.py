@@ -54,6 +54,12 @@ def setup_logging(log_level: str = "INFO", log_format: str = "json") -> None:
     # Silence noisy loggers in production
     logging.getLogger("uvicorn.access").setLevel(logging.WARNING)
 
+    # chromadb 0.5.x calls posthog.capture(id, name, props), but posthog 7.x
+    # accepts a single positional arg, so every client start logs a TypeError at
+    # error level. Telemetry is already disabled at the client (see
+    # rag/vectorstore.py), so nothing is sent — this only drops the false alarm.
+    logging.getLogger("chromadb.telemetry").setLevel(logging.CRITICAL)
+
 
 def get_logger(name: str = __name__) -> structlog.BoundLogger:
     """Import and call this anywhere: logger = get_logger(__name__)"""
