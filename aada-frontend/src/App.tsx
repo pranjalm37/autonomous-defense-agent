@@ -2,7 +2,7 @@ import { Routes, Route } from "react-router-dom";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import Login from "@/pages/Login";
-import Dashboard from "@/pages/Dashboard";
+import Triage from "@/pages/Triage";
 import Alerts from "@/pages/Alerts";
 import Investigations from "@/pages/Investigations";
 import Reports from "@/pages/Reports";
@@ -19,7 +19,7 @@ export default function App() {
           </ProtectedRoute>
         }
       >
-        <Route index element={<Dashboard />} />
+        <Route index element={<Triage />} />
         <Route path="alerts" element={<Alerts />} />
         <Route path="investigations" element={<Investigations />} />
         <Route path="reports" element={<Reports />} />
