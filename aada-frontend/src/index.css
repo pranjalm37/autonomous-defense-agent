@@ -3,54 +3,130 @@
 @tailwind utilities;
 
 /*
- * Dark theme. shadcn-style CSS variables (HSL triplets) so all UI primitives
- * inherit the palette. Neutral charcoal surfaces with a single accent color;
- * severity colors (critical/high/medium/low/info) are a separate, fixed scale
- * used only for alert semantics.
+ * Operator-console theme.
+ *
+ * The interface is monochrome: hue is reserved exclusively for threat severity,
+ * so a critical alert is the only colored element on screen. There is no brand
+ * accent — primary actions are high-contrast ink/void fills. Surfaces are
+ * separated by 1px rules rather than radius + shadow.
+ *
+ * Values are HSL channel triplets so Tailwind opacity modifiers (bg-crit/10)
+ * resolve correctly.
  */
+
+@font-face {
+  font-family: "Instrument Sans";
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: swap;
+  src: url("./assets/fonts/instrument-sans.woff2") format("woff2");
+}
+@font-face {
+  font-family: "JetBrains Mono";
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: swap;
+  src: url("./assets/fonts/jetbrains-mono.woff2") format("woff2");
+}
+
 @layer base {
   :root {
-    --background: 222 14% 8%;
-    --foreground: 210 20% 93%;
+    /* surfaces, darkest to lightest */
+    --void: 240 11% 4%;
+    --pane: 240 9% 6%;
+    --pane-2: 240 9% 8%;
+    --pane-3: 240 11% 11%;
+    --rule: 240 10% 13%;
+    --rule-2: 240 10% 19%;
 
-    --card: 222 14% 11%;
-    --card-foreground: 210 20% 93%;
+    /* text ramp */
+    --ink: 240 8% 95%;
+    --ink-2: 240 6% 63%;
+    --ink-3: 240 6% 39%;
 
-    --primary: 212 92% 61%;
-    --primary-foreground: 0 0% 100%;
+    /* the only hues in the system — threat severity */
+    --sev-critical: 0 100% 65%;
+    --sev-high: 27 85% 59%;
+    --sev-medium: 45 68% 54%;
+    --sev-low: 207 47% 56%;
+    --sev-info: 240 6% 39%;
+    --ok: 158 44% 47%;
 
-    --secondary: 222 12% 16%;
-    --secondary-foreground: 210 20% 93%;
+    --radius: 2px;
 
-    --muted: 222 12% 14%;
-    --muted-foreground: 215 12% 58%;
+    /* shadcn-compatible aliases so the UI primitives inherit the palette */
+    --background: var(--void);
+    --foreground: var(--ink);
+    --card: var(--pane);
+    --card-foreground: var(--ink);
+    --popover: var(--pane);
+    --popover-foreground: var(--ink);
+    --primary: var(--ink);
+    --primary-foreground: var(--void);
+    --secondary: var(--pane-2);
+    --secondary-foreground: var(--ink);
+    --muted: var(--pane-2);
+    --muted-foreground: var(--ink-2);
+    --accent: var(--pane-3);
+    --accent-foreground: var(--ink);
+    --destructive: var(--sev-critical);
+    --destructive-foreground: var(--ink);
+    --border: var(--rule);
+    --input: var(--rule-2);
+    --ring: var(--ink);
+  }
 
-    --accent: 222 12% 16%;
-    --accent-foreground: 210 20% 93%;
+  .light {
+    --void: 60 20% 98%;
+    --pane: 0 0% 100%;
+    --pane-2: 60 14% 95%;
+    --pane-3: 60 13% 92%;
+    --rule: 60 11% 87%;
+    --rule-2: 60 8% 80%;
 
-    --destructive: 356 70% 55%;
-    --destructive-foreground: 0 0% 100%;
+    --ink: 240 8% 8%;
+    --ink-2: 240 4% 38%;
+    --ink-3: 240 5% 57%;
 
-    --ok: 142 55% 45%;
-
-    --sev-critical: 350 89% 60%;
-    --sev-high: 25 95% 53%;
-    --sev-medium: 45 93% 47%;
-    --sev-low: 187 84% 53%;
-    --sev-info: 215 16% 47%;
-
-    --border: 222 10% 18%;
-    --input: 222 10% 18%;
-    --ring: 212 92% 61%;
-
-    --radius: 0.5rem;
+    --sev-critical: 0 74% 45%;
+    --sev-high: 26 90% 37%;
+    --sev-medium: 46 77% 30%;
+    --sev-low: 207 52% 36%;
+    --sev-info: 240 5% 57%;
+    --ok: 159 64% 29%;
   }
 }
 
 @layer base {
-  * { @apply border-border; }
+  * {
+    @apply border-border;
+  }
   body {
     @apply bg-background text-foreground antialiased;
-    font-feature-settings: "rlig" 1, "calt" 1;
+    font-family: "Instrument Sans", -apple-system, system-ui, sans-serif;
+    font-size: 13px;
+    line-height: 1.45;
+  }
+  ::selection {
+    background: hsl(var(--ink));
+    color: hsl(var(--void));
+  }
+}
+
+@layer components {
+  /* Every number, identifier, timing and label is set in mono. */
+  .data {
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.01em;
+  }
+  /* Small uppercase section label. */
+  .eyebrow {
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 9.5px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    @apply text-ink-3;
   }
 }

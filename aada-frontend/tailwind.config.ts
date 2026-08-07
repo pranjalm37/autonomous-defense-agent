@@ -1,6 +1,8 @@
 import type { Config } from "tailwindcss";
 
-/* Cyber-SOC theme — colors resolve to CSS variables defined in src/index.css */
+/* Operator-console theme — colors resolve to the CSS variables in src/index.css */
+const hsl = (v: string) => `hsl(var(${v}) / <alpha-value>)`;
+
 const config: Config = {
   darkMode: ["class"],
   content: ["./index.html", "./src/**/*.{ts,tsx}"],
@@ -8,44 +10,61 @@ const config: Config = {
     container: { center: true, padding: "1.5rem" },
     extend: {
       colors: {
-        border: "hsl(var(--border))",
-        input: "hsl(var(--input))",
-        ring: "hsl(var(--ring))",
-        background: "hsl(var(--background))",
-        foreground: "hsl(var(--foreground))",
-        primary: { DEFAULT: "hsl(var(--primary))", foreground: "hsl(var(--primary-foreground))" },
-        secondary: { DEFAULT: "hsl(var(--secondary))", foreground: "hsl(var(--secondary-foreground))" },
-        destructive: { DEFAULT: "hsl(var(--destructive))", foreground: "hsl(var(--destructive-foreground))" },
-        muted: { DEFAULT: "hsl(var(--muted))", foreground: "hsl(var(--muted-foreground))" },
-        accent: { DEFAULT: "hsl(var(--accent))", foreground: "hsl(var(--accent-foreground))" },
-        card: { DEFAULT: "hsl(var(--card))", foreground: "hsl(var(--card-foreground))" },
-        // Severity scale (used directly, e.g. text-sev-critical)
+        // surfaces
+        void: hsl("--void"),
+        pane: { DEFAULT: hsl("--pane"), 2: hsl("--pane-2"), 3: hsl("--pane-3") },
+        rule: { DEFAULT: hsl("--rule"), 2: hsl("--rule-2") },
+        // text ramp
+        ink: { DEFAULT: hsl("--ink"), 2: hsl("--ink-2"), 3: hsl("--ink-3") },
+        // the only hues in the system
         sev: {
-          critical: "hsl(var(--sev-critical))",
-          high: "hsl(var(--sev-high))",
-          medium: "hsl(var(--sev-medium))",
-          low: "hsl(var(--sev-low))",
-          info: "hsl(var(--sev-info))",
+          critical: hsl("--sev-critical"),
+          high: hsl("--sev-high"),
+          medium: hsl("--sev-medium"),
+          low: hsl("--sev-low"),
+          info: hsl("--sev-info"),
         },
-        ok: "hsl(var(--ok))",
+        ok: hsl("--ok"),
+
+        // shadcn-compatible aliases
+        border: hsl("--border"),
+        input: hsl("--input"),
+        ring: hsl("--ring"),
+        background: hsl("--background"),
+        foreground: hsl("--foreground"),
+        primary: { DEFAULT: hsl("--primary"), foreground: hsl("--primary-foreground") },
+        secondary: { DEFAULT: hsl("--secondary"), foreground: hsl("--secondary-foreground") },
+        destructive: { DEFAULT: hsl("--destructive"), foreground: hsl("--destructive-foreground") },
+        muted: { DEFAULT: hsl("--muted"), foreground: hsl("--muted-foreground") },
+        accent: { DEFAULT: hsl("--accent"), foreground: hsl("--accent-foreground") },
+        card: { DEFAULT: hsl("--card"), foreground: hsl("--card-foreground") },
       },
       borderRadius: {
         lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
+        md: "var(--radius)",
+        sm: "var(--radius)",
       },
       fontFamily: {
-        mono: ["ui-monospace", "SFMono-Regular", "Menlo", "monospace"],
+        sans: ["Instrument Sans", "-apple-system", "system-ui", "sans-serif"],
+        mono: ["JetBrains Mono", "ui-monospace", "SFMono-Regular", "monospace"],
+      },
+      fontSize: {
+        "2xs": ["9.5px", { lineHeight: "1.3" }],
+        xs: ["10.5px", { lineHeight: "1.4" }],
+        sm: ["12px", { lineHeight: "1.45" }],
+        base: ["13px", { lineHeight: "1.45" }],
+        lg: ["15px", { lineHeight: "1.35" }],
+        xl: ["18px", { lineHeight: "1.3" }],
+        "2xl": ["22px", { lineHeight: "1.25" }],
+        "3xl": ["30px", { lineHeight: "1.1" }],
       },
       keyframes: {
         "accordion-down": { from: { height: "0" }, to: { height: "var(--radix-accordion-content-height)" } },
         "accordion-up": { from: { height: "var(--radix-accordion-content-height)" }, to: { height: "0" } },
-        "pulse-glow": { "0%,100%": { opacity: "1" }, "50%": { opacity: "0.4" } },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        "pulse-glow": "pulse-glow 2s ease-in-out infinite",
       },
     },
   },
