@@ -24,7 +24,7 @@ export function Topbar() {
   const logout = useLogout();
 
   return (
-    <header className="flex h-16 items-center justify-between border-b border-border bg-card/40 px-4 backdrop-blur">
+    <header className="flex h-16 items-center justify-between border-b border-border bg-card px-4">
       <div className="flex items-center gap-3">
         <Button variant="ghost" size="icon" onClick={toggleSidebar} aria-label="Toggle sidebar">
           <Menu className="size-5" />

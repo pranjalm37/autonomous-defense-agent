@@ -49,8 +49,8 @@ export default function Dashboard() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Command Center</h1>
-          <p className="text-sm text-muted-foreground">Live posture across the environment</p>
+          <h1 className="text-2xl font-semibold tracking-tight">Overview</h1>
+          <p className="text-sm text-muted-foreground">Alert activity and remediation status</p>
         </div>
         {can("detection", "run") && (
           <Button onClick={() => runDetection.mutate(60)} disabled={runDetection.isPending}>
@@ -97,9 +97,9 @@ export default function Dashboard() {
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={byThreat} layout="vertical" margin={{ left: 24 }}>
                   <XAxis type="number" hide />
-                  <YAxis type="category" dataKey="name" width={120} tick={{ fontSize: 12, fill: "hsl(215 16% 57%)" }} />
-                  <Tooltip contentStyle={tooltipStyle} cursor={{ fill: "hsl(187 84% 53% / 0.08)" }} />
-                  <Bar dataKey="value" fill="hsl(187 84% 53%)" radius={[0, 4, 4, 0]} />
+                  <YAxis type="category" dataKey="name" width={120} tick={{ fontSize: 12, fill: "hsl(215 12% 58%)" }} />
+                  <Tooltip contentStyle={tooltipStyle} cursor={{ fill: "hsl(212 92% 61% / 0.08)" }} />
+                  <Bar dataKey="value" fill="hsl(212 92% 61%)" radius={[0, 4, 4, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             )}
@@ -142,8 +142,8 @@ export default function Dashboard() {
 }
 
 const tooltipStyle = {
-  background: "hsl(223 56% 9%)", border: "1px solid hsl(200 50% 24%)",
-  borderRadius: 8, fontSize: 12, color: "hsl(213 31% 91%)",
+  background: "hsl(222 14% 11%)", border: "1px solid hsl(222 10% 18%)",
+  borderRadius: 8, fontSize: 12, color: "hsl(210 20% 93%)",
 };
 function Empty({ text = "No data" }: { text?: string }) {
   return <div className="flex h-full items-center justify-center text-sm text-muted-foreground">{text}</div>;

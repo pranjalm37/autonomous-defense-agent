@@ -26,7 +26,7 @@ export function StatCard({
           <p className="mt-1 text-3xl font-bold tabular-nums">{value}</p>
           {hint && <p className="mt-0.5 text-xs text-muted-foreground">{hint}</p>}
         </div>
-        <div className={cn("rounded-lg bg-background/40 p-3", toneColor)}>
+        <div className={cn("rounded-lg bg-muted p-3", toneColor)}>
           <Icon className="size-6" />
         </div>
       </CardContent>

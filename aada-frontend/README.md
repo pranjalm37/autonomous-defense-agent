@@ -20,7 +20,7 @@ The dev server proxies `/api` → `http://localhost:8000` (the FastAPI backend).
 - **API:** one typed client (`src/lib/api.ts`) over `fetch`; types in `src/lib/types.ts`
   mirror the backend schemas.
 - **UI:** shadcn-style primitives in `src/components/ui/*` (CVA variants + `cn`), themed
-  via CSS variables in `src/index.css` (cyber-SOC dark palette).
+  via CSS variables in `src/index.css` (neutral dark theme, fixed severity color scale).
 
 ## Pages
 | Page | Route | Backend |

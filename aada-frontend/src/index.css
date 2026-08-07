@@ -3,47 +3,47 @@
 @tailwind utilities;
 
 /*
- * Cyber-SOC dark theme. shadcn-style CSS variables (HSL triplets) so all UI
- * primitives inherit the palette. Matches the original prototype:
- *   void #060B17 · cyan #22D3EE · red #F43F5E · orange #F97316 · amber #EAB308 · green #22C55E
+ * Dark theme. shadcn-style CSS variables (HSL triplets) so all UI primitives
+ * inherit the palette. Neutral charcoal surfaces with a single accent color;
+ * severity colors (critical/high/medium/low/info) are a separate, fixed scale
+ * used only for alert semantics.
  */
 @layer base {
   :root {
-    --background: 222 60% 6%;          /* #060B17 void */
-    --foreground: 213 31% 91%;         /* #E2E8F0 */
+    --background: 222 14% 8%;
+    --foreground: 210 20% 93%;
 
-    --card: 223 56% 9%;                /* #091024 glass panel */
-    --card-foreground: 213 31% 91%;
+    --card: 222 14% 11%;
+    --card-foreground: 210 20% 93%;
 
-    --primary: 187 84% 53%;            /* #22D3EE cyber cyan */
-    --primary-foreground: 222 60% 6%;
+    --primary: 212 92% 61%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 215 40% 16%;
-    --secondary-foreground: 213 31% 91%;
+    --secondary: 222 12% 16%;
+    --secondary-foreground: 210 20% 93%;
 
-    --muted: 217 33% 14%;
-    --muted-foreground: 215 16% 57%;   /* #64748B-ish */
+    --muted: 222 12% 14%;
+    --muted-foreground: 215 12% 58%;
 
-    --accent: 215 40% 16%;
-    --accent-foreground: 187 84% 53%;
+    --accent: 222 12% 16%;
+    --accent-foreground: 210 20% 93%;
 
-    --destructive: 350 89% 60%;        /* #F43F5E */
+    --destructive: 356 70% 55%;
     --destructive-foreground: 0 0% 100%;
 
-    --ok: 142 71% 45%;                 /* #22C55E */
+    --ok: 142 55% 45%;
 
-    --sev-critical: 350 89% 60%;       /* #F43F5E */
-    --sev-high: 25 95% 53%;            /* #F97316 */
-    --sev-medium: 45 93% 47%;          /* #EAB308 */
-    --sev-low: 187 84% 53%;            /* cyan */
-    --sev-info: 215 16% 47%;           /* slate */
+    --sev-critical: 350 89% 60%;
+    --sev-high: 25 95% 53%;
+    --sev-medium: 45 93% 47%;
+    --sev-low: 187 84% 53%;
+    --sev-info: 215 16% 47%;
 
-    --border: 199 80% 30% / 0.18;      /* cyan-tinted hairline (fallback below) */
-    --border: 200 50% 24%;
-    --input: 200 50% 24%;
-    --ring: 187 84% 53%;
+    --border: 222 10% 18%;
+    --input: 222 10% 18%;
+    --ring: 212 92% 61%;
 
-    --radius: 0.625rem;
+    --radius: 0.5rem;
   }
 }
 
@@ -52,16 +52,5 @@
   body {
     @apply bg-background text-foreground antialiased;
     font-feature-settings: "rlig" 1, "calt" 1;
-    background-image:
-      radial-gradient(circle at 15% 0%, hsl(187 84% 53% / 0.05), transparent 40%),
-      radial-gradient(circle at 85% 100%, hsl(187 84% 53% / 0.04), transparent 40%);
-    background-attachment: fixed;
-  }
-}
-
-@layer components {
-  /* Glassmorphism panel — the signature surface */
-  .glass {
-    @apply bg-card/90 border border-border rounded-lg backdrop-blur-sm;
   }
 }
