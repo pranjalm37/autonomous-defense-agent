@@ -16,7 +16,7 @@ const MODES: { value: DecisionMode; label: string; desc: string; icon: typeof Ey
 
 export default function Settings() {
   return (
-    <div className="space-y-5">
+    <div className="space-y-5 p-4">
       <div>
         <h1 className="text-2xl font-bold tracking-tight">Settings</h1>
         <p className="text-sm text-muted-foreground">Agent behavior, detection thresholds, integrations, audit</p>

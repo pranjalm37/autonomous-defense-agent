@@ -36,7 +36,7 @@ function Investigation({ alertId }: { alertId: string }) {
   if (!alert) return <div className="text-muted-foreground">Loading investigation…</div>;
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-5 p-4">
       <Link to="/alerts" className="text-xs text-primary hover:underline">← All alerts</Link>
 
       <div className="flex flex-wrap items-start justify-between gap-3">
@@ -78,7 +78,7 @@ function Investigation({ alertId }: { alertId: string }) {
           )}
         </div>
 
-        <div className="space-y-5">
+        <div className="space-y-5 p-4">
           {decision && <DecisionPanel d={decision} />}
           <ApprovalPanel alertId={alertId} />
         </div>

@@ -24,7 +24,7 @@ export default function Alerts() {
   );
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-5 p-4">
       <div>
         <h1 className="text-2xl font-bold tracking-tight">Alerts</h1>
         <p className="text-sm text-muted-foreground">Triage queue — {data?.total ?? 0} total</p>
