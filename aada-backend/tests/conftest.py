@@ -28,6 +28,9 @@ os.environ.setdefault("LOG_FORMAT", "console")
 os.environ.setdefault("OPENAI_API_KEY", "")        # → offline hashing embeddings + heuristic LLM
 os.environ.setdefault("CHROMA_HOST", "")           # → in-memory vector store
 os.environ.setdefault("CHROMA_PERSIST_DIR", "")
+# TestClient requests arrive as host "testserver"; without this TrustedHostMiddleware
+# rejects every ASGI test with 400 on any machine that has no .env.
+os.environ.setdefault("ALLOWED_HOSTS", "*")
 
 import pytest  # noqa: E402
 
