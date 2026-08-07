@@ -35,6 +35,8 @@ class AuditAction:
     ACTION_REJECTED = "action.rejected"
     ACTION_COMMENTED = "action.commented"
     ACTION_ESCALATED = "action.escalated"
+    # Staging a synthetic attack is a deliberate human act, so it is attributable.
+    SIMULATION_RUN = "simulation.run"
     # ai decisions
     AI_ANALYSIS = "ai.analysis"
     AI_DECISION = "ai.decision"
@@ -52,12 +54,14 @@ _CATEGORY: dict[str, str] = {
     AuditAction.AUTH_REGISTER: "user",
     AuditAction.ACTION_APPROVED: "user", AuditAction.ACTION_REJECTED: "user",
     AuditAction.ACTION_COMMENTED: "user", AuditAction.ACTION_ESCALATED: "user",
+    AuditAction.SIMULATION_RUN: "user",
     AuditAction.AI_ANALYSIS: "ai", AuditAction.AI_DECISION: "ai",
     AuditAction.DETECTION_RUN: "ai",
     AuditAction.ACTION_EXECUTED: "remediation", AuditAction.ACTION_ROLLED_BACK: "remediation",
     AuditAction.TOOL_CALL: "tool",
 }
-_PREFIX_CATEGORY = {"auth": "user", "ai": "ai", "detection": "ai", "tool": "tool", "action": "remediation"}
+_PREFIX_CATEGORY = {"auth": "user", "ai": "ai", "detection": "ai", "tool": "tool",
+                    "action": "remediation", "simulation": "user"}
 
 CATEGORIES = ["user", "ai", "remediation", "tool", "system"]
 
