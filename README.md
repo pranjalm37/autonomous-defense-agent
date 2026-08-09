@@ -1,10 +1,6 @@
 # AADA — Autonomous Defense Agent
 
-An end-to-end, AI-powered **Security Operations Center (SOC) agent**. AADA ingests
-security telemetry, detects attacks, reasons about them with an LLM grounded in a
-cybersecurity knowledge base, fuses every signal into a risk-scored decision, and
-proposes — or, within policy, executes — remediation behind a human-in-the-loop
-gate. Every step is audited.
+AADA is an AI-powered SOC agent. It takes in raw security logs, figures out what's an attack, reasons about it with an LLM that's grounded in a cybersecurity knowledge base, scores the risk, and either recommends or (within policy) executes a remediation — always with a human in the loop and everything logged.
 
 <!-- Badges (optional): add build/coverage/license badges once CI is set up. -->
 
@@ -12,8 +8,7 @@ gate. Every step is audited.
 
 ## Overview
 
-AADA models the full triage workflow a SOC analyst performs, as a chain of
-independent, single-responsibility services:
+The idea is to model what a SOC analyst actually does, as a pipeline of small services that each do one job:
 
 ```
 ingest → detect → analyze (LLM + RAG) → enrich (threat intel) → decide → respond → report
@@ -24,60 +19,42 @@ ingest → detect → analyze (LLM + RAG) → enrich (threat intel) → decide �
                             ▲ every step writes an immutable audit log ▲
 ```
 
-The system runs fully offline out of the box — deterministic local providers stand
-in for the LLM, embeddings, and threat-intel feeds — so the entire pipeline works
-without any API keys. Supplying keys switches to live providers with no code change.
+It runs fully offline out of the box — no API keys needed, since deterministic local providers stand in for the LLM, embeddings, and threat-intel feeds. Add real keys and it switches to live providers, no code changes required.
 
-> **Note:** This is an educational / research project. The remediation backends ship
-> as safe in-memory simulations; wire real ones in only behind the approval workflow.
+> This is an educational/research project. The remediation backends are safe in-memory simulations. Don't wire in a real firewall or account system without keeping the approval workflow in front of it.
 
 ## Features
 
-- **Multi-format ingestion** — JSON, CSV, SSH, auth, and web logs normalized to one
-  ECS-subset event schema.
-- **Detection engine** — 6 rules (SSH brute force, port scan, credential stuffing,
-  impossible travel, privilege escalation, malware/IOC) with risk scoring and full
-  **MITRE ATT&CK** mapping.
-- **RAG knowledge base** — MITRE / OWASP / Sigma / NIST / IR playbooks in a vector
-  store (ChromaDB), with pluggable OpenAI or offline embeddings.
-- **SOC analyst** — structured-output LLM analysis (executive summary, technical
-  detail, MITRE, risk, recommended actions) grounded in retrieved context.
-- **Decision engine** — fuses detection + LLM + threat-intel + RAG into one
-  risk/confidence score across **Monitor / Assisted / Autonomous** operating modes.
-- **Response engine** — 5 remediation actions (alert, block IP, disable account,
-  ticket, increase logging) with an **approval workflow**, **rollback**, and **safety
-  guardrails** (refuses to block internal IPs or disable protected accounts).
-- **External integrations** — VirusTotal, AbuseIPDB, and NVD clients with caching,
-  client-side rate limiting, retry/backoff, and graceful degradation.
-- **Auth & RBAC** — JWT (access + refresh), three roles (viewer / analyst / admin),
-  a permission map, and startup seeding.
-- **Immutable audit trail** — every user, model, remediation, and tool action recorded.
-- **Web dashboard** — React + TypeScript + Tailwind (Dashboard, Alerts,
-  Investigations, Reports, Settings).
+- Multi-format log ingestion (JSON, CSV, SSH, auth, web) normalized to one event schema
+- Detection engine with 6 rules (SSH brute force, port scan, credential stuffing, impossible travel, privilege escalation, malware/IOC), risk scoring, and MITRE ATT&CK mapping
+- RAG knowledge base (MITRE, OWASP, Sigma, NIST, IR playbooks) backed by ChromaDB, with OpenAI or offline embeddings
+- SOC analyst that produces structured LLM output — summary, technical detail, MITRE tags, risk score, recommended actions — grounded in retrieved context
+- Decision engine that fuses detection + LLM + threat intel + RAG into one risk/confidence score, with Monitor / Assisted / Autonomous modes
+- Response engine with 5 remediation actions (alert, block IP, disable account, ticket, increase logging), an approval workflow, rollback, and guardrails that refuse to block internal IPs or disable protected accounts
+- Threat intel integrations (VirusTotal, AbuseIPDB, NVD) with caching, rate limiting, retry/backoff, and graceful degradation when a provider is down
+- JWT auth with three roles (viewer / analyst / admin) and a permission map
+- An immutable audit log covering every user, model, and remediation action
+- A React dashboard (Dashboard, Alerts, Investigations, Reports, Settings)
 
 ## Architecture
 
-The backend is organized as pure-core services (rules, fusion, decision policy, and
-report building are pure functions over plain inputs) behind thin I/O edges, with
-provider interfaces that swap between live and offline implementations by
-configuration. See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for system-context,
-pipeline, and data-model diagrams.
+The backend keeps the core logic pure — rules, signal fusion, decision policy, and report building are all plain functions over plain inputs — with I/O and provider swapping (live vs. offline) pushed to the edges. See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for diagrams.
 
 | Concern | Component |
 |---|---|
 | API | FastAPI (async), 42 REST endpoints across 13 modules |
 | Persistence | PostgreSQL 16 (11-table schema, SQLAlchemy 2.0 async) |
 | Retrieval | ChromaDB vector store + embedding providers |
-| Tooling | Model Context Protocol (MCP) server exposing 6 security tools |
+| Tooling | MCP server exposing 6 security tools |
 | Frontend | React SPA served by nginx, reverse-proxying the API (single origin) |
 
 ## Installation
 
 ### Prerequisites
-- Docker + Docker Compose (recommended path), **or**
-- Python 3.11 + Poetry and Node.js 18+ for local development.
+- Docker + Docker Compose (recommended), **or**
+- Python 3.11 + Poetry and Node.js 18+ for running things locally
 
-### Run with Docker (recommended)
+### Run with Docker
 
 ```bash
 cp .env.example .env          # then edit .env — see Configuration below
@@ -93,12 +70,11 @@ docker compose ps             # services should report healthy
 
 Log in with the `DEFAULT_ADMIN_EMAIL` / `DEFAULT_ADMIN_PASSWORD` you set in `.env`.
 
-Stop with `docker compose down` (add `-v` to also remove the database volume).
+Stop with `docker compose down` (add `-v` if you also want to drop the database volume).
 
 ## Configuration
 
-All configuration is via environment variables. Copy `.env.example` to `.env` and
-set the required values; the rest have sensible defaults.
+Everything's set via environment variables. Copy `.env.example` to `.env` and fill in the required ones — the rest have reasonable defaults.
 
 | Variable | Required | Notes |
 |---|---|---|
@@ -106,34 +82,28 @@ set the required values; the rest have sensible defaults.
 | `POSTGRES_PASSWORD` | ✅ | database password |
 | `DEFAULT_ADMIN_PASSWORD` | ✅ | bootstrap admin password (seeded on first start) |
 | `DEFAULT_ADMIN_EMAIL` | | bootstrap admin email (default `admin@aada.io`) |
-| `OPENAI_API_KEY` | | enables live LLM + embeddings; offline fallback if unset |
-| `VIRUSTOTAL_API_KEY` | | enables live IP/file reputation enrichment |
-| `ABUSEIPDB_API_KEY` | | enables live IP abuse enrichment |
+| `OPENAI_API_KEY` | | enables live LLM + embeddings; falls back to offline if unset |
+| `VIRUSTOTAL_API_KEY` | | enables live IP/file reputation lookups |
+| `ABUSEIPDB_API_KEY` | | enables live IP abuse lookups |
 | `NVD_API_KEY` | | raises the NVD CVE rate limit |
 
-`.env` files are git-ignored and must never be committed — only `.env.example`
-(placeholders) is tracked.
+`.env` is git-ignored and should never be committed — only `.env.example` (placeholders) is tracked.
 
 ## Usage
 
-Once the stack is running, drive the full attack → detection → defense loop with the
-included demo script:
+Once the stack is up, run the included demo to see the whole attack → detection → defense loop:
 
 ```bash
 ./demo_attack.sh
 ```
 
-It stages a live SSH brute-force attack and walks every stage — ingest, detect, AI
-analysis, decision, approval, block, rollback, and audit. Point it at an internal IP
-to watch the safety guardrail refuse the action:
+It stages a live SSH brute-force attack and walks through every stage: ingest, detect, AI analysis, decision, approval, block, rollback, audit. Point it at an internal IP to see the safety guardrail kick in and refuse the action:
 
 ```bash
 ATTACKER_IP=10.0.0.9 ./demo_attack.sh
 ```
 
-You can also drive everything from the dashboard (http://localhost:8080) or the
-Swagger explorer (http://localhost:8000/docs). See [DEMO.md](DEMO.md) for a full
-walkthrough and [docs/API.md](docs/API.md) for the endpoint reference.
+You can also drive things from the dashboard (http://localhost:8080) or Swagger (http://localhost:8000/docs). [DEMO.md](DEMO.md) has a full walkthrough and [docs/API.md](docs/API.md) has the endpoint reference.
 
 ### Local development
 
@@ -141,7 +111,7 @@ walkthrough and [docs/API.md](docs/API.md) for the endpoint reference.
 # Backend
 cd aada-backend && poetry install
 uvicorn app.main:app --reload                    # http://localhost:8000/docs
-pytest tests/ -q --ignore=tests/test_auth.py     # 169 offline tests
+pytest tests/ -q --ignore=tests/test_auth.py     # offline test suite
 
 # Frontend
 cd aada-frontend && npm install && npm run dev   # http://localhost:5173
@@ -154,7 +124,7 @@ cd aada-frontend && npm install && npm run dev   # http://localhost:5173
 ![Investigation](docs/images/investigation.png)
 -->
 
-_Screenshots coming soon._
+_Coming soon._
 
 ## Project structure
 
@@ -169,10 +139,10 @@ _Screenshots coming soon._
 │   │   ├── services/            detection · rag · ai_analyst · decision · response · reporting
 │   │   ├── integrations/        VirusTotal / AbuseIPDB / NVD clients
 │   │   ├── mcp_server/          MCP tool server (6 security tools)
-│   │   ├── models/              SQLAlchemy models (source of truth for the schema)
+│   │   ├── models/               SQLAlchemy models (source of truth for the schema)
 │   │   └── core/, db/, schemas/
 │   └── tests/                   unit · API · attack-simulation suites
-└── aada-frontend/              React + TypeScript + Tailwind dashboard
+└── aada-frontend/               React + TypeScript + Tailwind dashboard
 ```
 
 ## Tech stack
@@ -185,22 +155,22 @@ _Screenshots coming soon._
 | Integrations | httpx clients (VirusTotal / AbuseIPDB / NVD), MCP tool server |
 | Frontend | React 18, TypeScript, Vite, Tailwind, shadcn/ui, React Query, Zustand |
 | Infra | Docker multi-stage builds, docker-compose, nginx |
-| Quality | pytest (169 tests), structlog (JSON logs), 42 REST endpoints |
+| Quality | pytest, structlog (JSON logs), 42 REST endpoints |
 
 ## Contributing
 
-Contributions are welcome. To get started:
+PRs welcome. To get set up:
 
-1. Fork the repository and create a feature branch.
-2. Set up the backend and frontend as shown under **Local development**.
-3. Keep changes focused and covered by tests — run `pytest tests/` before opening a PR.
-4. Follow the existing conventions (async DB access, typed schemas, structured logging).
+1. Fork the repo and branch off `main`.
+2. Set up the backend and frontend as described under Local development above.
+3. Keep changes focused and run `pytest tests/` before opening a PR.
+4. Stick to the existing conventions — async DB access, typed schemas, structured logging.
 
-Please open an issue to discuss significant changes before submitting a large PR.
+For anything bigger than a small fix, open an issue first so we can talk through the approach.
 
 ## License
 
-Released under the [MIT License](LICENSE).
+MIT — see [LICENSE](LICENSE).
 
 ## Further reading
 
