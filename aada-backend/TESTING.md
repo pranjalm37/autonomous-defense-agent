@@ -1,9 +1,9 @@
 # AADA — Testing Strategy
 
-**165 tests, all offline** (no network, no live DB, no API keys). Run:
+**188 tests, all offline** (no network, no live DB, no API keys). Run:
 
 ```bash
-pytest tests/ -q --ignore=tests/test_auth.py   # 165 passed
+pytest tests/ -q --ignore=tests/test_auth.py   # 188 passed
 ```
 
 (`test_auth.py` is the optional DB-integration tier — it needs a live Postgres.)
@@ -13,7 +13,7 @@ pytest tests/ -q --ignore=tests/test_auth.py   # 165 passed
 ```
         ▲  attack simulations   (8)   end-to-end, realistic adversary behavior
        ╱ ╲ API tests           (14)   HTTP contract: routing, auth, RBAC, validation
-      ╱   ╲ service/unit      (143)   pure logic, one component at a time
+      ╱   ╲ service/unit      (166)   pure logic, one component at a time
      ╱─────╲ (DB integration)         opt-in, needs Postgres
 ```
 
@@ -32,6 +32,8 @@ a few high-value end-to-end simulations prove the components work *together*.
 | `test_mcp_tools.py` | unit | 6 MCP tools + registry |
 | `test_integrations.py` | unit | VT/AbuseIPDB/NVD clients, cache, rate limit, retry |
 | `test_approval_workflow.py`, `test_audit_system.py`, `test_auth_rbac.py`, `test_reporting.py` | unit | audit, RBAC, reports |
+| `test_schema_serialization.py` | unit | IP-address coercion on audit/alert/event fields, config list-env parsing |
+| `test_simulator.py` | unit | attack scenario registry — parses/normalizes correctly, trips the expected detection rule, one case per scenario |
 | **`test_api.py`** | **API** | **auth (401), RBAC (403), validation (422), DB-free endpoints end-to-end** |
 | **`test_attack_simulations.py`** | **E2E** | **staged attacks through ingest → detect → analyze → decide** |
 

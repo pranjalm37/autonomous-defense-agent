@@ -111,7 +111,7 @@ You can also drive things from the dashboard (http://localhost:8080) or Swagger 
 # Backend
 cd aada-backend && poetry install
 uvicorn app.main:app --reload                    # http://localhost:8000/docs
-pytest tests/ -q --ignore=tests/test_auth.py     # offline test suite
+pytest tests/ -q --ignore=tests/test_auth.py     # 188 offline tests
 
 # Frontend
 cd aada-frontend && npm install && npm run dev   # http://localhost:5173
@@ -155,7 +155,7 @@ _Coming soon._
 | Integrations | httpx clients (VirusTotal / AbuseIPDB / NVD), MCP tool server |
 | Frontend | React 18, TypeScript, Vite, Tailwind, shadcn/ui, React Query, Zustand |
 | Infra | Docker multi-stage builds, docker-compose, nginx |
-| Quality | pytest, structlog (JSON logs), 42 REST endpoints |
+| Quality | pytest (188 tests), structlog (JSON logs), 42 REST endpoints |
 
 ## Contributing
 

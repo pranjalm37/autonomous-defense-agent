@@ -113,7 +113,7 @@ queries), `JSONB` (flexible AI output), `ARRAY` (MITRE techniques).
   system runs and is tested with zero network or API keys; production is a config swap.
 - **Pure core, thin edges** — detection rules, fusion, the decision tree, report
   building, and handlers are pure functions over plain inputs; DB/HTTP live at the
-  endpoints. This is why 169 tests run fast and offline.
+  endpoints. This is why 188 tests run fast and offline.
 - **Human-in-the-loop by default** — the agent *proposes*; consequential actions
   require approval. Autonomous mode only auto-executes reversible, low-blast actions.
 - **Everything is audited** — append-only `audit_logs` records who/what/when/where +
