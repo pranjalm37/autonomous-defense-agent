@@ -1,0 +1,11 @@
+# Normalize line endings so scripts don't break if someone edits on Windows.
+* text=auto eol=lf
+*.sh text eol=lf
+*.py text eol=lf
+
+# Don't let git try to diff these as text.
+*.woff2 binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.ico binary
