@@ -16,6 +16,7 @@ yet, so treat these as milestones rather than published versions.
 - `.github/ISSUE_TEMPLATE/bug_report.yml` — structured bug report form.
 - `.github/ISSUE_TEMPLATE/feature_request.yml` — structured feature request form.
 - `.github/PULL_REQUEST_TEMPLATE.md` — checklist matching CONTRIBUTING.md.
+- `.github/dependabot.yml` — weekly version updates for pip (aada-backend) and npm (aada-frontend).
 
 ### Changed
 - Rewrote the README in plainer language.
