@@ -6,16 +6,19 @@ yet, so treat these as milestones rather than published versions.
 
 ## [Unreleased]
 
+### Added
+- `.gitattributes` — LF line endings on shell/Python files, binary handling
+  for fonts and images.
+- `.editorconfig` — 4-space indent for Python, 2-space for TS/JSON/YAML.
+- `CONTRIBUTING.md` — setup, backend/frontend conventions, PR expectations.
+
 ### Changed
 - Rewrote the README in plainer language.
 - Corrected the offline test count across README, TESTING.md, and
   ARCHITECTURE.md (docs disagreed with each other — 165 vs. 169 — and both
   were stale; real count is 188).
-
-### Added
-- `.gitattributes` — LF line endings on shell/Python files, binary handling
-  for fonts and images.
-- `.editorconfig` — 4-space indent for Python, 2-space for TS/JSON/YAML.
+- Shrank the README's Contributing section to a pointer at CONTRIBUTING.md
+  instead of duplicating it.
 
 ## [1.1.0] - 2026-08-07
 

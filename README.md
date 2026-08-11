@@ -159,14 +159,8 @@ _Coming soon._
 
 ## Contributing
 
-PRs welcome. To get set up:
-
-1. Fork the repo and branch off `main`.
-2. Set up the backend and frontend as described under Local development above.
-3. Keep changes focused and run `pytest tests/` before opening a PR.
-4. Stick to the existing conventions — async DB access, typed schemas, structured logging.
-
-For anything bigger than a small fix, open an issue first so we can talk through the approach.
+PRs welcome — see [CONTRIBUTING.md](CONTRIBUTING.md) for setup, conventions, and
+what to know before opening one.
 
 ## License
 
