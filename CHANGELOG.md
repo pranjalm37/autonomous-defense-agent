@@ -15,6 +15,7 @@ yet, so treat these as milestones rather than published versions.
 - `CODE_OF_CONDUCT.md` — Contributor Covenant v2.1.
 - `.github/ISSUE_TEMPLATE/bug_report.yml` — structured bug report form.
 - `.github/ISSUE_TEMPLATE/feature_request.yml` — structured feature request form.
+- `.github/PULL_REQUEST_TEMPLATE.md` — checklist matching CONTRIBUTING.md.
 
 ### Changed
 - Rewrote the README in plainer language.
