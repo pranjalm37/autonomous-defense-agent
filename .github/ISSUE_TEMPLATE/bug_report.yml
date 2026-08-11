@@ -1,0 +1,81 @@
+name: Bug report
+description: Something isn't working the way it should.
+labels: [bug]
+body:
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: What did you expect instead?
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Run ./demo_attack.sh
+        2. ...
+    validations:
+      required: true
+
+  - type: dropdown
+    id: component
+    attributes:
+      label: Where does this show up?
+      multiple: true
+      options:
+        - Ingestion (events, parsers)
+        - Detection engine
+        - RAG / knowledge base
+        - AI SOC analyst
+        - Decision engine
+        - Response / remediation
+        - Auth / RBAC
+        - Reporting
+        - MCP server
+        - Frontend / dashboard
+        - Docker / deployment
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: run-mode
+    attributes:
+      label: How are you running it?
+      options:
+        - Docker Compose
+        - Local (poetry + npm)
+    validations:
+      required: true
+
+  - type: dropdown
+    id: provider-mode
+    attributes:
+      label: Offline or live providers?
+      description: Is OPENAI_API_KEY (and/or VirusTotal/AbuseIPDB/NVD keys) set?
+      options:
+        - Offline (no API keys set)
+        - Live (OpenAI key set)
+        - Not sure
+    validations:
+      required: false
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant logs
+      description: Backend logs are structured JSON (structlog) — paste the relevant lines.
+      render: shell
+    validations:
+      required: false
+
+  - type: input
+    id: version
+    attributes:
+      label: Commit / version
+      description: git commit hash, or which section of the README/CHANGELOG you were following
+    validations:
+      required: false
