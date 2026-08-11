@@ -1,0 +1,47 @@
+name: Feature request
+description: Suggest something new, or an improvement to what's already there.
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What's missing or annoying?
+      description: What are you trying to do that the project doesn't support well right now?
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: What would you want instead?
+      description: Rough shape is fine — doesn't need to be a full design.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: component
+    attributes:
+      label: Where would this live?
+      multiple: true
+      options:
+        - Ingestion (events, parsers)
+        - Detection engine
+        - RAG / knowledge base
+        - AI SOC analyst
+        - Decision engine
+        - Response / remediation
+        - Auth / RBAC
+        - Reporting
+        - MCP server
+        - Frontend / dashboard
+        - Docker / deployment
+        - Not sure
+    validations:
+      required: false
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Anything you've already tried or considered?
+    validations:
+      required: false
