@@ -11,6 +11,7 @@ yet, so treat these as milestones rather than published versions.
   for fonts and images.
 - `.editorconfig` — 4-space indent for Python, 2-space for TS/JSON/YAML.
 - `CONTRIBUTING.md` — setup, backend/frontend conventions, PR expectations.
+- `SECURITY.md` — reporting process and scope notes.
 
 ### Changed
 - Rewrote the README in plainer language.
