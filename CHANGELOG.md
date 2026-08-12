@@ -18,6 +18,8 @@ yet, so treat these as milestones rather than published versions.
 - `.github/PULL_REQUEST_TEMPLATE.md` — checklist matching CONTRIBUTING.md.
 - `.github/dependabot.yml` — weekly version updates for pip (aada-backend) and npm (aada-frontend).
 - `.github/workflows/backend-tests.yml` — runs the offline pytest suite on push/PR.
+- GitHub Actions ecosystem block in `dependabot.yml` — keeps action versions
+  (e.g. `actions/checkout`, `actions/setup-python`) up to date too.
 
 ### Removed
 - Unused `langchain` dependency from `aada-backend/pyproject.toml`. It was
