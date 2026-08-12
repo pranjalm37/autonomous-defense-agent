@@ -19,6 +19,14 @@ yet, so treat these as milestones rather than published versions.
 - `.github/dependabot.yml` — weekly version updates for pip (aada-backend) and npm (aada-frontend).
 - `.github/workflows/backend-tests.yml` — runs the offline pytest suite on push/PR.
 
+### Removed
+- Unused `langchain` dependency from `aada-backend/pyproject.toml`. It was
+  never actually imported anywhere in the codebase (the RAG pipeline uses
+  its own vector store and embedding providers), and a critical CVE
+  (GHSA-c67j-w6g6-q2cm, langchain-core serialization injection) was flagged
+  against it. Not exploitable here since it was dead code, but no reason to
+  keep unused, vulnerable dependencies around.
+
 ### Changed
 - Rewrote the README in plainer language.
 - Corrected the offline test count across README, TESTING.md, and
