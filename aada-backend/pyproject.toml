@@ -40,9 +40,14 @@ build-backend = "poetry.core.masonry.api"
 asyncio_mode = "auto"
 
 [tool.ruff]
-line-length = 100
+line-length = 120
 target-version = "py311"
 exclude = ["alembic/versions"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I"]
+
+[tool.ruff.lint.per-file-ignores]
+# Docstring shows a literal example log line — wrapping it would misrepresent
+# the format it's documenting.
+"app/services/ingestion/parsers/auth_parser.py" = ["E501"]

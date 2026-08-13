@@ -4,13 +4,17 @@ Each Action triggers one or more tool calls (e.g. block_ip may call
 firewall_api then verify_block). Captures input/output for debugging and auditing.
 """
 from __future__ import annotations
-import uuid
+
 import enum
+import uuid
 from datetime import datetime
 from typing import TYPE_CHECKING
-from sqlalchemy import String, Text, Integer, DateTime, ForeignKey, Enum as SAEnum
-from sqlalchemy.dialects.postgresql import UUID, JSONB
+
+from sqlalchemy import DateTime, ForeignKey, Integer, String, Text
+from sqlalchemy import Enum as SAEnum
+from sqlalchemy.dialects.postgresql import JSONB, UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+
 from app.db.base import Base, UUIDMixin
 
 if TYPE_CHECKING:

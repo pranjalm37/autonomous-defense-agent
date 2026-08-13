@@ -4,17 +4,21 @@ Types include technical incident reports, executive summaries, and
 compliance exports. Stored as structured markdown with metadata sidebar.
 """
 from __future__ import annotations
-import uuid
+
 import enum
+import uuid
 from typing import TYPE_CHECKING
-from sqlalchemy import String, Text, ForeignKey, Enum as SAEnum
-from sqlalchemy.dialects.postgresql import UUID, JSONB
+
+from sqlalchemy import Enum as SAEnum
+from sqlalchemy import ForeignKey, String, Text
+from sqlalchemy.dialects.postgresql import JSONB, UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+
 from app.db.base import Base, TimestampMixin, UUIDMixin
 
 if TYPE_CHECKING:
-    from app.models.incident import Incident
     from app.models.alert import Alert
+    from app.models.incident import Incident
     from app.models.user import User
 
 

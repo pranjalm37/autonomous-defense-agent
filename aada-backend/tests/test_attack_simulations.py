@@ -14,9 +14,9 @@ from __future__ import annotations
 import pytest
 
 from app.schemas.event import LogFormat
-from app.services.ingestion.parsers import get_parser
-from app.services.ingestion import normalizer
 from app.services.detection.engine import DetectionEngine
+from app.services.ingestion import normalizer
+from app.services.ingestion.parsers import get_parser
 from tests import attack_data as atk
 
 
@@ -105,8 +105,15 @@ def test_full_pipeline_brute_force_to_decision():
     from app.services.ai_analyst import AISOCAnalyst
     from app.services.ai_analyst.schemas import AlertInput, AnalysisContext, EventInput
     from app.services.decision import (
-        DecisionEngine as DecEngine, DecisionInput, DecisionMode,
-        DetectionSignal, LLMSignal, ThreatIntelSignal, ActionProposal,
+        ActionProposal,
+        DecisionInput,
+        DecisionMode,
+        DetectionSignal,
+        LLMSignal,
+        ThreatIntelSignal,
+    )
+    from app.services.decision import (
+        DecisionEngine as DecEngine,
     )
 
     # 1. ingest + detect

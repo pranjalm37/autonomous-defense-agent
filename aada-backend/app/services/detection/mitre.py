@@ -16,7 +16,6 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-
 # ── Tactics ───────────────────────────────────────────────────────────────────
 TACTICS: dict[str, str] = {
     "TA0043": "Reconnaissance",

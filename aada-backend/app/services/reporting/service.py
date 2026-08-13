@@ -20,7 +20,11 @@ from app.models.event import SecurityEvent
 from app.models.incident import Incident
 from app.models.report import Report, ReportType
 from app.services.reporting.builder import (
-    ActionView, AlertView, EventView, IncidentBundle, ReportBuilder,
+    ActionView,
+    AlertView,
+    EventView,
+    IncidentBundle,
+    ReportBuilder,
 )
 from app.services.reporting.schemas import IncidentReport
 

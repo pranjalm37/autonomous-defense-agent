@@ -2,24 +2,27 @@ import uuid
 
 from fastapi import APIRouter, Depends, Request
 from fastapi.security import OAuth2PasswordRequestForm
+from jose import JWTError
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-from jose import JWTError
 
-from app.core.exceptions import UnauthorizedError, ConflictError, NotFoundError
+from app.core.exceptions import ConflictError, NotFoundError, UnauthorizedError
 from app.core.security import (
-    verify_password, hash_password,
-    create_access_token, create_refresh_token, decode_token,
+    create_access_token,
+    create_refresh_token,
+    decode_token,
+    hash_password,
+    verify_password,
 )
 from app.db.session import get_db
 from app.dependencies import get_current_user
-from app.models.user import User
+from app.logging_config import get_logger
 from app.models.role import Role
+from app.models.user import User
 from app.schemas.token import Token
 from app.schemas.user import UserCreate, UserResponse
 from app.services import audit
 from app.services.audit import AuditAction
-from app.logging_config import get_logger
 
 logger = get_logger(__name__)
 router = APIRouter(prefix="/auth", tags=["auth"])

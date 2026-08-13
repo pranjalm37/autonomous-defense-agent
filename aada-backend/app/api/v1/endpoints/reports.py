@@ -26,7 +26,7 @@ from app.dependencies import get_current_user, require_roles
 from app.models.report import Report
 from app.models.user import User
 from app.schemas.report import ReportListItem
-from app.services.reporting import ReportingService, IncidentReport, to_json, to_pdf
+from app.services.reporting import IncidentReport, ReportingService, to_json, to_pdf
 
 router = APIRouter(prefix="/reports", tags=["reports"])
 _service = ReportingService()

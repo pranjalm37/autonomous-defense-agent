@@ -27,8 +27,13 @@ human — even in full autonomous mode.
 from __future__ import annotations
 
 from app.services.decision.schemas import (
-    ActionDecision, ActionProposal, AUTONOMOUS_SAFE_ACTIONS,
-    DecisionInput, DecisionMode, DecisionThresholds, Disposition,
+    AUTONOMOUS_SAFE_ACTIONS,
+    ActionDecision,
+    ActionProposal,
+    DecisionInput,
+    DecisionMode,
+    DecisionThresholds,
+    Disposition,
 )
 
 

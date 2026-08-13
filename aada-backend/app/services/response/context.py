@@ -3,7 +3,10 @@ from __future__ import annotations
 
 from app.mcp_server.providers import SimulatedFirewall
 from app.services.response.backends import (
-    SimulatedDirectory, SimulatedLoggingController, SimulatedNotifier, SimulatedTicketing,
+    SimulatedDirectory,
+    SimulatedLoggingController,
+    SimulatedNotifier,
+    SimulatedTicketing,
 )
 from app.services.response.framework import ActionContext
 

@@ -4,20 +4,24 @@ While an alert is a single detection, an incident is the full story: lateral mov
 persistence, exfiltration. The AI agent creates and updates incidents automatically.
 """
 from __future__ import annotations
-import uuid
+
 import enum
+import uuid
 from datetime import datetime
 from typing import TYPE_CHECKING
-from sqlalchemy import String, Text, ForeignKey, DateTime, Enum as SAEnum
-from sqlalchemy.dialects.postgresql import UUID, JSONB, ARRAY
+
+from sqlalchemy import DateTime, ForeignKey, String, Text
+from sqlalchemy import Enum as SAEnum
+from sqlalchemy.dialects.postgresql import ARRAY, JSONB, UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+
 from app.db.base import Base, TimestampMixin, UUIDMixin
 
 if TYPE_CHECKING:
-    from app.models.user import User
-    from app.models.alert import Alert
     from app.models.action import Action
+    from app.models.alert import Alert
     from app.models.report import Report
+    from app.models.user import User
 
 
 class IncidentSeverity(str, enum.Enum):

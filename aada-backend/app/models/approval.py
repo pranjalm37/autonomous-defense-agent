@@ -4,13 +4,17 @@ One action can have multiple approval records if a denial triggers escalation
 and a different reviewer later approves. The latest record wins.
 """
 from __future__ import annotations
-import uuid
+
 import enum
+import uuid
 from datetime import datetime
 from typing import TYPE_CHECKING
-from sqlalchemy import Text, ForeignKey, DateTime, Enum as SAEnum
+
+from sqlalchemy import DateTime, ForeignKey, Text
+from sqlalchemy import Enum as SAEnum
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+
 from app.db.base import Base, UUIDMixin
 
 if TYPE_CHECKING:

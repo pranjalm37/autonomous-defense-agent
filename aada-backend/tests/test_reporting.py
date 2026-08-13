@@ -9,7 +9,13 @@ import json
 from datetime import datetime, timedelta, timezone
 
 from app.services.reporting import (
-    ActionView, AlertView, EventView, IncidentBundle, ReportBuilder, to_json, to_pdf,
+    ActionView,
+    AlertView,
+    EventView,
+    IncidentBundle,
+    ReportBuilder,
+    to_json,
+    to_pdf,
 )
 from app.services.reporting.schemas import IncidentReport
 

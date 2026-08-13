@@ -166,6 +166,7 @@ class DBEventStore:
     async def search(self, *, source_ip=None, username=None, event_type=None,
                      hostname=None, limit=50) -> list[dict]:
         from sqlalchemy import select
+
         from app.models.event import SecurityEvent
 
         async with self._session_factory() as session:

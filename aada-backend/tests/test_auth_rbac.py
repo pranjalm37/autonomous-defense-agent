@@ -12,8 +12,12 @@ from jose import jwt
 from app.config import get_settings
 from app.core import security
 from app.core.roles import (
-    ALL_ROLES, ROLE_DEFINITIONS, ROLE_PERMISSIONS, RoleName,
-    has_permission, role_at_least,
+    ALL_ROLES,
+    ROLE_DEFINITIONS,
+    ROLE_PERMISSIONS,
+    RoleName,
+    has_permission,
+    role_at_least,
 )
 
 
@@ -109,8 +113,8 @@ async def test_require_roles_allows_admin_implicitly():
 
 @pytest.mark.asyncio
 async def test_require_roles_denies_viewer_on_write():
-    from app.dependencies import require_roles
     from app.core.exceptions import ForbiddenError
+    from app.dependencies import require_roles
     guard = require_roles("analyst", "admin")
     with pytest.raises(ForbiddenError):
         await _run_guard(guard, _FakeUser("viewer"))
@@ -118,8 +122,8 @@ async def test_require_roles_denies_viewer_on_write():
 
 @pytest.mark.asyncio
 async def test_require_permission_checks_map():
-    from app.dependencies import require_permission
     from app.core.exceptions import ForbiddenError
+    from app.dependencies import require_permission
     approve = require_permission("actions", "approve")
     assert await _run_guard(approve, _FakeUser("analyst"))
     with pytest.raises(ForbiddenError):

@@ -57,7 +57,7 @@ def make_user(role: str = "analyst", *, email: str | None = None):
 
 def make_event(event_type: str, *, t=None, **fields):
     """Lightweight SecurityEvent-shaped object for detection/pipeline tests."""
-    from datetime import datetime, timezone, timedelta
+    from datetime import datetime, timedelta, timezone
     base = datetime(2026, 1, 10, 14, 0, 0, tzinfo=timezone.utc)
     obj = type("Ev", (), {})()
     obj.id = uuid.uuid4()
@@ -89,6 +89,7 @@ def client(app_instance):
 def as_role(app_instance):
     """Return a TestClient authenticated as the given role via dependency override."""
     from fastapi.testclient import TestClient
+
     from app.dependencies import get_current_user
 
     def _as(role: str) -> "TestClient":

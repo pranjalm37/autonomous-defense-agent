@@ -1,14 +1,15 @@
+import uuid
 from contextlib import asynccontextmanager
+
+import structlog
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.trustedhost import TrustedHostMiddleware
-import structlog
-import uuid
 
-from app.config import get_settings
-from app.logging_config import setup_logging, get_logger
-from app.core.exceptions import register_exception_handlers
 from app.api.v1.router import router as v1_router
+from app.config import get_settings
+from app.core.exceptions import register_exception_handlers
+from app.logging_config import get_logger, setup_logging
 
 settings = get_settings()
 
@@ -40,8 +41,8 @@ async def lifespan(app: FastAPI):
     # or unmigrated DB at startup must not crash the app.
     if getattr(settings, "auto_seed", True):
         try:
-            from app.db.session import AsyncSessionLocal
             from app.db.seed import seed
+            from app.db.session import AsyncSessionLocal
             async with AsyncSessionLocal() as session:
                 await seed(session)
                 await session.commit()

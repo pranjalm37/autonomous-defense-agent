@@ -25,7 +25,10 @@ from app.models.event import SecurityEvent
 from app.services.ai_analyst.llm import LLMProvider, build_llm
 from app.services.ai_analyst.prompts import SYSTEM_PROMPT, build_user_prompt
 from app.services.ai_analyst.schemas import (
-    AIAnalysis, AlertInput, AnalysisContext, EventInput,
+    AIAnalysis,
+    AlertInput,
+    AnalysisContext,
+    EventInput,
 )
 
 logger = get_logger(__name__)

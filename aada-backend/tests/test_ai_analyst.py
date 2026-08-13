@@ -14,7 +14,10 @@ from app.services.ai_analyst import AISOCAnalyst
 from app.services.ai_analyst.llm import HeuristicLLMProvider
 from app.services.ai_analyst.prompts import SYSTEM_PROMPT, build_user_prompt
 from app.services.ai_analyst.schemas import (
-    AIAnalysis, AlertInput, AnalysisContext, EventInput,
+    AIAnalysis,
+    AlertInput,
+    AnalysisContext,
+    EventInput,
 )
 from app.services.rag import build_pipeline
 from app.services.rag.knowledge import load_all

@@ -3,7 +3,12 @@ from __future__ import annotations
 
 from app.mcp_server.registry import ToolRegistry
 from app.mcp_server.tools import (
-    ip_reputation, cve_search, geoip, log_search, firewall, threat_intel,
+    cve_search,
+    firewall,
+    geoip,
+    ip_reputation,
+    log_search,
+    threat_intel,
 )
 
 _MODULES = [ip_reputation, cve_search, geoip, log_search, firewall, threat_intel]

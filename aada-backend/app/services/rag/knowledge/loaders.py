@@ -131,7 +131,7 @@ def _load_markdown_dir(folder: Path, source: SourceType, prefix: str) -> list[Kn
     docs = []
     for path in sorted(folder.glob("*.md")):
         text = path.read_text()
-        first_line = next((l for l in text.splitlines() if l.strip()), path.stem)
+        first_line = next((line for line in text.splitlines() if line.strip()), path.stem)
         title = first_line.lstrip("# ").strip()
         docs.append(KnowledgeDocument(
             doc_id=f"{prefix}:{path.stem}",

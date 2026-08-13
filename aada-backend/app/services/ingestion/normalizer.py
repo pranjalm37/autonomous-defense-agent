@@ -27,7 +27,7 @@ from __future__ import annotations
 import ipaddress
 from datetime import datetime, timezone
 
-from app.models.event import EventSource, EventSeverity
+from app.models.event import EventSeverity, EventSource
 from app.schemas.event import NormalizedEvent
 
 # ── Canonical field ← source aliases ──────────────────────────────────────────

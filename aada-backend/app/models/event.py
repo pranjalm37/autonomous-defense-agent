@@ -3,13 +3,17 @@ events — raw security telemetry ingested from SIEM / EDR / Firewall / IDS / Cl
 Every alert must trace back to one or more source events (evidence chain).
 """
 from __future__ import annotations
-import uuid
+
 import enum
+import uuid
 from datetime import datetime
 from typing import TYPE_CHECKING
-from sqlalchemy import String, Text, Boolean, ForeignKey, DateTime, Enum as SAEnum
-from sqlalchemy.dialects.postgresql import UUID, JSONB, INET
+
+from sqlalchemy import Boolean, DateTime, ForeignKey, String, Text
+from sqlalchemy import Enum as SAEnum
+from sqlalchemy.dialects.postgresql import INET, JSONB, UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+
 from app.db.base import Base, TimestampMixin, UUIDMixin
 
 if TYPE_CHECKING:

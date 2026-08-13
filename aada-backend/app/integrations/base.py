@@ -25,8 +25,12 @@ import httpx
 
 from app.integrations.cache import Cache, NullCache
 from app.integrations.exceptions import (
-    AuthenticationError, IntegrationError, InvalidResponseError,
-    NotFoundError, RateLimitError, UpstreamError,
+    AuthenticationError,
+    IntegrationError,
+    InvalidResponseError,
+    NotFoundError,
+    RateLimitError,
+    UpstreamError,
 )
 from app.integrations.rate_limit import TokenBucket
 from app.logging_config import get_logger

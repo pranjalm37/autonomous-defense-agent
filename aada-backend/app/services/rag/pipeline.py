@@ -17,11 +17,15 @@ from functools import lru_cache
 from app.logging_config import get_logger
 from app.services.rag.chunking import chunk_document
 from app.services.rag.embeddings import (
-    EmbeddingProvider, HashingEmbeddingProvider, OpenAIEmbeddingProvider,
+    EmbeddingProvider,
+    HashingEmbeddingProvider,
+    OpenAIEmbeddingProvider,
 )
 from app.services.rag.schemas import Chunk, KnowledgeDocument, RetrievalResult, SourceType
 from app.services.rag.vectorstore import (
-    ChromaVectorStore, InMemoryVectorStore, VectorStore,
+    ChromaVectorStore,
+    InMemoryVectorStore,
+    VectorStore,
 )
 
 logger = get_logger(__name__)

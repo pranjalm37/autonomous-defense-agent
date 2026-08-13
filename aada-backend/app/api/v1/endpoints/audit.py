@@ -31,7 +31,11 @@ from app.models.audit_log import AuditLog
 from app.models.tool_log import ToolLog
 from app.models.user import User
 from app.schemas.audit import (
-    AuditLogList, AuditLogResponse, AuditStats, TimelineEntry, ToolLogResponse,
+    AuditLogList,
+    AuditLogResponse,
+    AuditStats,
+    TimelineEntry,
+    ToolLogResponse,
 )
 
 router = APIRouter(prefix="/audit", tags=["audit"])

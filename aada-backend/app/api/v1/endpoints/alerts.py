@@ -1,16 +1,16 @@
 import uuid
 
 from fastapi import APIRouter, Depends, Query
-from sqlalchemy import select, func
+from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.exceptions import NotFoundError
 from app.db.session import get_db
 from app.dependencies import get_current_user, require_roles
-from app.models.alert import Alert, Severity, AlertStatus
-from app.models.user import User
-from app.schemas.alert import AlertCreate, AlertUpdate, AlertResponse, AlertListResponse
 from app.logging_config import get_logger
+from app.models.alert import Alert, AlertStatus, Severity
+from app.models.user import User
+from app.schemas.alert import AlertCreate, AlertListResponse, AlertResponse, AlertUpdate
 
 logger = get_logger(__name__)
 router = APIRouter(prefix="/alerts", tags=["alerts"])
@@ -79,7 +79,12 @@ async def update_alert(
     for field, value in payload.model_dump(exclude_none=True).items():
         setattr(alert, field, value)
 
-    logger.info("alert_updated", alert_id=str(alert_id), changes=payload.model_dump(exclude_none=True), user_id=str(current_user.id))
+    logger.info(
+        "alert_updated",
+        alert_id=str(alert_id),
+        changes=payload.model_dump(exclude_none=True),
+        user_id=str(current_user.id),
+    )
     return alert
 
 

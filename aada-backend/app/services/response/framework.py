@@ -23,11 +23,14 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 
+from app.mcp_server.providers import FirewallBackend
 from app.models.action import ActionType
 from app.services.response.backends import (
-    AccountDirectory, LoggingController, Notifier, TicketingSystem,
+    AccountDirectory,
+    LoggingController,
+    Notifier,
+    TicketingSystem,
 )
-from app.mcp_server.providers import FirewallBackend
 
 
 class GuardrailError(Exception):

@@ -40,6 +40,23 @@ yet, so treat these as milestones rather than published versions.
   against it. Not exploitable here since it was dead code, but no reason to
   keep unused, vulnerable dependencies around.
 
+### Fixed
+- Applied Ruff's safe autofixes across the backend (import sorting, unused
+  imports) — 109 of the 216 issues found in #15/#16. Verified every touched
+  `__init__.py` for net-removed re-exports before trusting it (found none —
+  all reordering, no names actually dropped).
+- Bumped Ruff's `line-length` from 100 to 120 after checking the remaining
+  107 line-too-long violations: 105 of them were within 20 characters of
+  the old limit, and running the formatter to reflow everything would have
+  touched 133 files / ~8,200 lines for a codebase that was never run
+  through one — not worth that blast radius for a lint config mismatch.
+  Fixed the 2 real outliers by hand: wrapped a long `logger.info(...)`
+  call, and added a per-file `E501` ignore for a parser docstring that
+  quotes a literal example log line (wrapping it would misrepresent the
+  format it documents).
+- Renamed an ambiguous loop variable (`l` → `line`) flagged by E741.
+- `ruff check .` is now clean.
+
 ### Changed
 - Rewrote the README in plainer language.
 - Corrected the offline test count across README, TESTING.md, and

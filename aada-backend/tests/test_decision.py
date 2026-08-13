@@ -7,10 +7,18 @@ from __future__ import annotations
 import pytest
 
 from app.services.decision import (
-    ActionProposal, DecisionEngine, DecisionInput, DecisionMode,
-    DetectionSignal, KnowledgeSignal, LLMSignal, ThreatIntelSignal, Disposition, Verdict,
+    ActionProposal,
+    DecisionEngine,
+    DecisionInput,
+    DecisionMode,
+    DetectionSignal,
+    Disposition,
+    KnowledgeSignal,
+    LLMSignal,
+    ThreatIntelSignal,
+    Verdict,
+    fusion,
 )
-from app.services.decision import fusion
 
 ENGINE = DecisionEngine()
 

@@ -18,10 +18,14 @@ from app.dependencies import get_current_user, require_roles
 from app.logging_config import get_logger
 from app.models.user import User
 from app.schemas.knowledge import (
-    IngestResult, KnowledgeQuery, KnowledgeQueryResult, KnowledgeStats, RetrievedChunk,
+    IngestResult,
+    KnowledgeQuery,
+    KnowledgeQueryResult,
+    KnowledgeStats,
+    RetrievedChunk,
 )
-from app.services.rag.pipeline import get_default_pipeline as get_pipeline
 from app.services.rag.knowledge import load_all
+from app.services.rag.pipeline import get_default_pipeline as get_pipeline
 
 logger = get_logger(__name__)
 router = APIRouter(prefix="/knowledge", tags=["knowledge"])

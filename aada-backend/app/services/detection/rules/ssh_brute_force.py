@@ -21,7 +21,13 @@ from collections.abc import Sequence
 from app.models.alert import Severity
 from app.services.detection import mitre, scoring
 from app.services.detection.base import (
-    BaseRule, Detection, field, group_by, max_in_window, distinct, is_external,
+    BaseRule,
+    Detection,
+    distinct,
+    field,
+    group_by,
+    is_external,
+    max_in_window,
 )
 
 _FAIL_EVENTS = {"ssh_login_failed", "ssh_invalid_user"}

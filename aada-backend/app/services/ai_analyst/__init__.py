@@ -1,9 +1,13 @@
 from app.services.ai_analyst.analyst import AISOCAnalyst
-from app.services.ai_analyst.schemas import (
-    AIAnalysis, AlertInput, AnalysisContext, EventInput,
-    MitreTechnique, RecommendedAction,
-)
 from app.services.ai_analyst.llm import build_llm
+from app.services.ai_analyst.schemas import (
+    AIAnalysis,
+    AlertInput,
+    AnalysisContext,
+    EventInput,
+    MitreTechnique,
+    RecommendedAction,
+)
 
 __all__ = [
     "AISOCAnalyst",

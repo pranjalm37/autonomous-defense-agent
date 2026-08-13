@@ -1,7 +1,9 @@
 import uuid
-from pydantic import BaseModel, ConfigDict, Field
 from datetime import datetime
-from app.models.alert import Severity, AlertStatus
+
+from pydantic import BaseModel, ConfigDict, Field
+
+from app.models.alert import AlertStatus, Severity
 from app.schemas._types import IPStr
 
 

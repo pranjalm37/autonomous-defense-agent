@@ -9,12 +9,12 @@ import math
 
 import pytest
 
-from app.services.rag import build_pipeline, SourceType
-from app.services.rag.chunking import chunk_document, _split_recursive
+from app.services.rag import SourceType, build_pipeline
+from app.services.rag.chunking import _split_recursive, chunk_document
 from app.services.rag.embeddings import HashingEmbeddingProvider
 from app.services.rag.knowledge import load_all
 from app.services.rag.schemas import ChunkStrategy, KnowledgeDocument
-from app.services.rag.vectorstore import InMemoryVectorStore, cosine_similarity
+from app.services.rag.vectorstore import cosine_similarity
 
 
 # ── Chunking ──────────────────────────────────────────────────────────────────

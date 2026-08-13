@@ -23,10 +23,10 @@ from app.dependencies import get_current_user, require_roles
 from app.models.user import User
 from app.schemas.analyst import AdHocAnalyzeRequest
 from app.services import audit
-from app.services.audit import AuditAction
-from app.services.ai_analyst import AISOCAnalyst, AIAnalysis
+from app.services.ai_analyst import AIAnalysis, AISOCAnalyst
 from app.services.ai_analyst.llm import build_llm
 from app.services.ai_analyst.schemas import AlertInput, AnalysisContext, EventInput
+from app.services.audit import AuditAction
 
 router = APIRouter(prefix="/analyst", tags=["analyst"])
 

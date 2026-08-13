@@ -1,5 +1,9 @@
 from app.services.reporting.builder import (
-    ActionView, AlertView, EventView, IncidentBundle, ReportBuilder,
+    ActionView,
+    AlertView,
+    EventView,
+    IncidentBundle,
+    ReportBuilder,
 )
 from app.services.reporting.exporters import to_json, to_pdf
 from app.services.reporting.schemas import IncidentReport

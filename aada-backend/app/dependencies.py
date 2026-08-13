@@ -1,13 +1,13 @@
 import uuid
 
 from fastapi import Depends
-from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from jose import JWTError
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
-from app.core.exceptions import UnauthorizedError, ForbiddenError
+from app.core.exceptions import ForbiddenError, UnauthorizedError
 from app.core.roles import RoleName, has_permission
 from app.core.security import decode_token
 from app.db.session import get_db

@@ -1,13 +1,15 @@
 import asyncio
 from logging.config import fileConfig
+
 from sqlalchemy import pool
 from sqlalchemy.ext.asyncio import create_async_engine
+
+import app.models  # noqa: F401 — imports all models so autogenerate sees every table
 from alembic import context
+from app.config import get_settings
 
 # Import Base + all models so Alembic detects them for autogenerate
 from app.db.base import Base
-import app.models  # noqa: F401 — imports all models so autogenerate sees every table
-from app.config import get_settings
 
 config = context.config
 settings = get_settings()

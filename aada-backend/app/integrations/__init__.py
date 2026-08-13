@@ -1,8 +1,11 @@
 from app.integrations.abuseipdb import AbuseIPDBClient
 from app.integrations.enrichment import EnrichmentService
 from app.integrations.exceptions import (
-    AuthenticationError, IntegrationError, NotFoundError,
-    RateLimitError, UpstreamError,
+    AuthenticationError,
+    IntegrationError,
+    NotFoundError,
+    RateLimitError,
+    UpstreamError,
 )
 from app.integrations.nvd import NVDClient
 from app.integrations.schemas import CVERecord, FileReport, IPReputation

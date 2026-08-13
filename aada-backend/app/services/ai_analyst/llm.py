@@ -24,10 +24,13 @@ import ipaddress
 import re
 from typing import Protocol
 
-from app.services.ai_analyst.schemas import (
-    AIAnalysis, AnalysisContext, MitreTechnique, RecommendedAction,
-)
 from app.models.alert import Severity
+from app.services.ai_analyst.schemas import (
+    AIAnalysis,
+    AnalysisContext,
+    MitreTechnique,
+    RecommendedAction,
+)
 
 # Map the detector's threat_type → a sensible default remediation.
 _ACTION_BY_THREAT = {
@@ -166,7 +169,7 @@ class HeuristicLLMProvider:
 
     @staticmethod
     def _techniques(ids: list[str]) -> list[MitreTechnique]:
-        from app.services.detection.mitre import TECHNIQUES, TACTICS
+        from app.services.detection.mitre import TACTICS, TECHNIQUES
         out = []
         for tid in ids:
             t = TECHNIQUES.get(tid)

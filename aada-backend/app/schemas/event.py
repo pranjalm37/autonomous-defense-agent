@@ -11,13 +11,13 @@ any one vendor's field names.
 """
 from __future__ import annotations
 
-import uuid
 import enum
+import uuid
 from datetime import datetime
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
-from app.models.event import EventSource, EventSeverity
+from app.models.event import EventSeverity, EventSource
 from app.schemas._types import IPStr
 
 

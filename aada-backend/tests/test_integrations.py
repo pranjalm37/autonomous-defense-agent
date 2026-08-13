@@ -13,12 +13,14 @@ from app.integrations.abuseipdb import AbuseIPDBClient
 from app.integrations.cache import NullCache, TTLCache
 from app.integrations.enrichment import EnrichmentService
 from app.integrations.exceptions import (
-    AuthenticationError, NotFoundError, RateLimitError, UpstreamError,
+    AuthenticationError,
+    NotFoundError,
+    RateLimitError,
+    UpstreamError,
 )
 from app.integrations.nvd import NVDClient
 from app.integrations.rate_limit import TokenBucket
 from app.integrations.virustotal import VirusTotalClient
-
 
 # ── Fixtures: canned API responses ────────────────────────────────────────────
 VT_IP = {

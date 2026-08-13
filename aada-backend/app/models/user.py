@@ -3,20 +3,23 @@ users — SOC analysts, managers, and system accounts that interact with the age
 Central auth identity; RBAC delegated to the roles table.
 """
 from __future__ import annotations
+
 import uuid
 from datetime import datetime
 from typing import TYPE_CHECKING
-from sqlalchemy import String, Boolean, ForeignKey, DateTime
-from sqlalchemy.dialects.postgresql import UUID, INET
+
+from sqlalchemy import Boolean, DateTime, ForeignKey, String
+from sqlalchemy.dialects.postgresql import INET, UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+
 from app.db.base import Base, TimestampMixin, UUIDMixin
 
 if TYPE_CHECKING:
-    from app.models.role import Role
     from app.models.alert import Alert
-    from app.models.incident import Incident
     from app.models.approval import Approval
     from app.models.audit_log import AuditLog
+    from app.models.incident import Incident
+    from app.models.role import Role
 
 
 class User(Base, UUIDMixin, TimestampMixin):

@@ -51,7 +51,7 @@ SERVER_NAME = "aada-security"
 
 def build_mcp_server(context: ToolContext | None = None):
     """Create the MCP Server, wiring our registry into list_tools / call_tool."""
-    from mcp.server import Server          # lazy import (SDK optional at import time)
+    from mcp.server import Server  # lazy import (SDK optional at import time)
     from mcp.types import TextContent, Tool
 
     registry = build_registry()

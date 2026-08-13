@@ -15,9 +15,13 @@ import uuid
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 
-from app.services.detection.mitre import TECHNIQUES, TACTICS
+from app.services.detection.mitre import TACTICS, TECHNIQUES
 from app.services.reporting.schemas import (
-    IncidentReport, IOCSet, MitreRef, Recommendation, TimelineEntry,
+    IncidentReport,
+    IOCSet,
+    MitreRef,
+    Recommendation,
+    TimelineEntry,
 )
 
 

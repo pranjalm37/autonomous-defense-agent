@@ -12,16 +12,13 @@ from datetime import datetime, timedelta, timezone
 import pytest
 
 from app.models.alert import Severity
-from app.services.detection import DetectionEngine
-from app.services.detection.base import Detection
-from app.services.detection import scoring
-from app.services.detection.geo import GeoPoint, StaticGeoResolver
-from app.services.detection.rules.ssh_brute_force import SSHBruteForceRule
-from app.services.detection.rules.port_scan import PortScanRule
+from app.services.detection import DetectionEngine, scoring
 from app.services.detection.rules.credential_stuffing import CredentialStuffingRule
 from app.services.detection.rules.impossible_travel import ImpossibleTravelRule
-from app.services.detection.rules.privilege_escalation import PrivilegeEscalationRule
 from app.services.detection.rules.malware_indicators import MalwareIndicatorRule
+from app.services.detection.rules.port_scan import PortScanRule
+from app.services.detection.rules.privilege_escalation import PrivilegeEscalationRule
+from app.services.detection.rules.ssh_brute_force import SSHBruteForceRule
 
 T0 = datetime(2026, 1, 10, 14, 0, 0, tzinfo=timezone.utc)
 

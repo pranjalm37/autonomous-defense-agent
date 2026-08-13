@@ -4,20 +4,24 @@ Sits between raw event ingestion and human-reviewed incidents.
 Each alert carries the full AI reasoning chain and MITRE mapping.
 """
 from __future__ import annotations
-import uuid
+
 import enum
+import uuid
 from datetime import datetime
 from typing import TYPE_CHECKING
-from sqlalchemy import String, Float, Text, ForeignKey, DateTime, Enum as SAEnum
-from sqlalchemy.dialects.postgresql import UUID, JSONB, INET, ARRAY
+
+from sqlalchemy import DateTime, Float, ForeignKey, String, Text
+from sqlalchemy import Enum as SAEnum
+from sqlalchemy.dialects.postgresql import ARRAY, INET, JSONB, UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+
 from app.db.base import Base, TimestampMixin, UUIDMixin
 
 if TYPE_CHECKING:
-    from app.models.user import User
-    from app.models.incident import Incident
-    from app.models.event import SecurityEvent
     from app.models.action import Action
+    from app.models.event import SecurityEvent
+    from app.models.incident import Incident
+    from app.models.user import User
 
 
 class Severity(str, enum.Enum):

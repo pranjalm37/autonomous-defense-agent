@@ -10,8 +10,6 @@ malformed line can't block thousands of good ones.
 """
 from __future__ import annotations
 
-from datetime import datetime, timezone
-
 from pydantic import ValidationError as PydanticValidationError
 from sqlalchemy.ext.asyncio import AsyncSession
 

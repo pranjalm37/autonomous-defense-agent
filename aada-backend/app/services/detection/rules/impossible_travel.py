@@ -21,7 +21,7 @@ from collections.abc import Sequence
 
 from app.models.alert import Severity
 from app.services.detection import mitre, scoring
-from app.services.detection.base import BaseRule, Detection, field, group_by, event_time
+from app.services.detection.base import BaseRule, Detection, event_time, field, group_by
 from app.services.detection.geo import GeoResolver, StaticGeoResolver, haversine_km
 
 _SUCCESS_EVENTS = {"ssh_login_success", "login_success", "console_login"}

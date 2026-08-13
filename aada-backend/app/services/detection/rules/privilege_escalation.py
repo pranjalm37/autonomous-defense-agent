@@ -24,7 +24,11 @@ from collections.abc import Sequence
 from app.models.alert import Severity
 from app.services.detection import mitre, scoring
 from app.services.detection.base import (
-    BaseRule, Detection, field, group_by, distinct,
+    BaseRule,
+    Detection,
+    distinct,
+    field,
+    group_by,
 )
 
 # command → (label, extra technique). Order matters: first match wins.

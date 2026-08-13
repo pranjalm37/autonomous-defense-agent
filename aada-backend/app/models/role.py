@@ -3,10 +3,13 @@ roles — fine-grained permission sets assigned to users.
 Exists so permissions can be updated at runtime without code deploys.
 """
 from __future__ import annotations
+
 from typing import TYPE_CHECKING
-from sqlalchemy import String, Text, Boolean
+
+from sqlalchemy import Boolean, String, Text
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+
 from app.db.base import Base, TimestampMixin, UUIDMixin
 
 if TYPE_CHECKING:

@@ -18,8 +18,16 @@ from app.logging_config import get_logger
 from app.services.decision import fusion
 from app.services.decision.policy import decide_dispositions
 from app.services.decision.schemas import (
-    ActionProposal, Decision, DecisionInput, DecisionMode, DecisionThresholds,
-    Disposition, DetectionSignal, KnowledgeSignal, LLMSignal, ThreatIntelSignal,
+    ActionProposal,
+    Decision,
+    DecisionInput,
+    DecisionMode,
+    DecisionThresholds,
+    DetectionSignal,
+    Disposition,
+    KnowledgeSignal,
+    LLMSignal,
+    ThreatIntelSignal,
     Verdict,
 )
 

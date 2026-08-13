@@ -35,7 +35,9 @@ than being wrong about "look at this."
 from __future__ import annotations
 
 from app.services.decision.schemas import (
-    DecisionInput, DecisionThresholds, KnowledgeSignal,
+    DecisionInput,
+    DecisionThresholds,
+    KnowledgeSignal,
 )
 
 _W_DETECTION = 0.35

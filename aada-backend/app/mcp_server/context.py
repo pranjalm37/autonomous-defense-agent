@@ -14,11 +14,16 @@ from collections.abc import Callable
 from dataclasses import dataclass, field
 from typing import Any
 
-from app.services.detection.geo import GeoResolver, StaticGeoResolver
 from app.mcp_server.providers import (
-    CVEDatabase, EventStore, FirewallBackend, InMemoryEventStore,
-    ReputationFeed, SimulatedFirewall, ThreatIntelFeed,
+    CVEDatabase,
+    EventStore,
+    FirewallBackend,
+    InMemoryEventStore,
+    ReputationFeed,
+    SimulatedFirewall,
+    ThreatIntelFeed,
 )
+from app.services.detection.geo import GeoResolver, StaticGeoResolver
 
 
 @dataclass

@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import pytest
 
+
 # ── OpenAPI / routing ─────────────────────────────────────────────────────────
 def test_openapi_lists_all_routers(client):
     paths = client.get("/openapi.json").json()["paths"]

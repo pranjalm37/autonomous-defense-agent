@@ -1,7 +1,6 @@
 from fastapi import FastAPI, Request, status
 from fastapi.responses import JSONResponse
 
-
 # ── Domain Exceptions ────────────────────────────────────────────────────────
 
 class AADAException(Exception):

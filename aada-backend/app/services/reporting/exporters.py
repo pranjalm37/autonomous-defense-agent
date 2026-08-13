@@ -7,7 +7,7 @@ same IncidentReport, so they never disagree.
 """
 from __future__ import annotations
 
-from app.services.reporting.pdf import CYAN, DARK, GREY, PDFWriter
+from app.services.reporting.pdf import DARK, GREY, PDFWriter
 from app.services.reporting.schemas import IncidentReport
 
 

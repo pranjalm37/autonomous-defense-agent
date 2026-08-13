@@ -10,8 +10,8 @@ import uuid
 from datetime import datetime, timezone
 from types import SimpleNamespace
 
-from app.schemas.audit import AuditLogResponse
 from app.schemas.alert import AlertResponse
+from app.schemas.audit import AuditLogResponse
 from app.schemas.event import EventResponse
 
 
@@ -39,8 +39,8 @@ def test_audit_ip_address_allows_none():
 
 
 def test_alert_and_event_ip_fields_coerce():
-    from app.models.alert import Severity, AlertStatus
-    from app.models.event import EventSource, EventSeverity
+    from app.models.alert import AlertStatus, Severity
+    from app.models.event import EventSeverity, EventSource
 
     alert = SimpleNamespace(
         id=uuid.uuid4(), title="x", severity=Severity.HIGH, status=AlertStatus.NEW,

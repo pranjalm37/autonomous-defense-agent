@@ -4,22 +4,26 @@ Every action requires human approval before execution (human-in-the-loop gate),
 except for auto-approved low-risk actions configured in settings.
 """
 from __future__ import annotations
-import uuid
+
 import enum
+import uuid
 from datetime import datetime
 from typing import TYPE_CHECKING
-from sqlalchemy import String, Float, Text, Boolean, ForeignKey, DateTime, Enum as SAEnum
-from sqlalchemy.dialects.postgresql import UUID, JSONB
+
+from sqlalchemy import Boolean, DateTime, Float, ForeignKey, String, Text
+from sqlalchemy import Enum as SAEnum
+from sqlalchemy.dialects.postgresql import JSONB, UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+
 from app.db.base import Base, TimestampMixin, UUIDMixin
 
 if TYPE_CHECKING:
-    from app.models.alert import Alert
-    from app.models.incident import Incident
-    from app.models.user import User
-    from app.models.approval import Approval
-    from app.models.tool_log import ToolLog
     from app.models.action_comment import ActionComment
+    from app.models.alert import Alert
+    from app.models.approval import Approval
+    from app.models.incident import Incident
+    from app.models.tool_log import ToolLog
+    from app.models.user import User
 
 
 class ActionType(str, enum.Enum):

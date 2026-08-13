@@ -4,12 +4,15 @@ Written by the AuditMiddleware on every mutating request. Never updated or delet
 Used for compliance (SOC 2, ISO 27001) and forensic reconstruction.
 """
 from __future__ import annotations
+
 import uuid
 from datetime import datetime
 from typing import TYPE_CHECKING
-from sqlalchemy import String, Text, DateTime, ForeignKey
-from sqlalchemy.dialects.postgresql import UUID, JSONB, INET
+
+from sqlalchemy import DateTime, ForeignKey, String, Text
+from sqlalchemy.dialects.postgresql import INET, JSONB, UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+
 from app.db.base import Base, UUIDMixin
 
 if TYPE_CHECKING:
