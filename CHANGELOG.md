@@ -22,6 +22,12 @@ yet, so treat these as milestones rather than published versions.
   (e.g. `actions/checkout`, `actions/setup-python`) up to date too.
 - `.github/workflows/frontend-build.yml` — `npm ci` + typecheck + Vite build
   on push/PR (Node 20, matching the Dockerfile).
+- `target-version` and an `alembic/versions` exclude in the Ruff config, and
+  moved `select` into `[tool.ruff.lint]` (the old top-level location is
+  deprecated). Ran it against the codebase: 216 outstanding issues, 108
+  auto-fixable — ruff's been a declared dependency but never actually
+  wired into anything, so nothing's enforced it until now. Cleanup is a
+  separate step (#17).
 
 ### Removed
 - Unused `langchain` dependency from `aada-backend/pyproject.toml`. It was
