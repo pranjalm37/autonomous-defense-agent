@@ -28,6 +28,9 @@ yet, so treat these as milestones rather than published versions.
   auto-fixable — ruff's been a declared dependency but never actually
   wired into anything, so nothing's enforced it until now. Cleanup is a
   separate step (#17).
+- `lint` job in `backend-tests.yml` (renamed to "Backend CI") — runs
+  `ruff check .` on push/PR. This will fail right now: 216 outstanding
+  issues from before Ruff was ever actually wired in. #17 cleans those up.
 
 ### Removed
 - Unused `langchain` dependency from `aada-backend/pyproject.toml`. It was

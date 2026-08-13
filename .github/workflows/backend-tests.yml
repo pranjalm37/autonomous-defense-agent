@@ -1,4 +1,4 @@
-name: Backend tests
+name: Backend CI
 
 on:
   push:
@@ -32,3 +32,24 @@ jobs:
 
       - name: Run tests
         run: poetry run pytest tests/ -q --ignore=tests/test_auth.py
+
+  lint:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: aada-backend
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Poetry
+        run: pipx install poetry
+
+      - name: Install dev dependencies
+        run: poetry install --only dev --no-interaction
+
+      - name: Run Ruff
+        run: poetry run ruff check .
