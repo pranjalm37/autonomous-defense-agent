@@ -2,7 +2,10 @@
 
 AADA is an AI-powered SOC agent. It takes in raw security logs, figures out what's an attack, reasons about it with an LLM that's grounded in a cybersecurity knowledge base, scores the risk, and either recommends or (within policy) executes a remediation — always with a human in the loop and everything logged.
 
-<!-- Badges (optional): add build/coverage/license badges once CI is set up. -->
+[![Backend CI](https://github.com/pranjalm37/autonomous-defense-agent/actions/workflows/backend-tests.yml/badge.svg)](https://github.com/pranjalm37/autonomous-defense-agent/actions/workflows/backend-tests.yml)
+[![Frontend build](https://github.com/pranjalm37/autonomous-defense-agent/actions/workflows/frontend-build.yml/badge.svg)](https://github.com/pranjalm37/autonomous-defense-agent/actions/workflows/frontend-build.yml)
+[![Python 3.11](https://img.shields.io/badge/python-3.11-blue)](https://www.python.org/downloads/release/python-3110/)
+[![License: MIT](https://img.shields.io/github/license/pranjalm37/autonomous-defense-agent)](LICENSE)
 
 ---
 
