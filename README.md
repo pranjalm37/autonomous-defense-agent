@@ -122,12 +122,23 @@ cd aada-frontend && npm install && npm run dev   # http://localhost:5173
 
 ## Screenshots
 
-<!-- Add dashboard screenshots here, e.g.:
-![Dashboard](docs/images/dashboard.png)
-![Investigation](docs/images/investigation.png)
--->
+**Triage dashboard** — event activity, open alerts by severity, the response pipeline for whichever alert is selected, and the attack simulator for staging scenarios.
 
-_Coming soon._
+![Triage dashboard](docs/images/dashboard.png)
+
+**AI analysis** — executive summary, attack narrative, MITRE ATT&CK mapping, and confidence-scored recommended actions for a single alert.
+
+![AI analysis](docs/images/ai-analysis.png)
+
+**Incident report** — auto-generated timeline, IOCs, root cause, and recommendations, exportable as PDF or JSON.
+
+![Incident report](docs/images/incident-report.png)
+
+**Alerts** — full alert list with severity, confidence, and status.
+
+![Alerts](docs/images/alerts.png)
+
+All four are from a real local run: `docker compose up -d --build` followed by `./demo_attack.sh` plus a few staged scenarios through the attack simulator, no fabricated data.
 
 ## Project structure
 

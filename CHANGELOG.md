@@ -33,6 +33,11 @@ yet, so treat these as milestones rather than published versions.
   issues from before Ruff was ever actually wired in. #17 cleans those up.
 - Status badges in the README: Backend CI, Frontend build, Python 3.11,
   MIT license. Fills the placeholder that was there before CI existed.
+- Four real screenshots in `docs/images/` (Triage dashboard, AI analysis,
+  incident report, alerts list), replacing the "Coming soon" placeholder.
+  Captured from an actual local run — `docker compose up -d --build`,
+  `./demo_attack.sh`, plus a few more scenarios staged through the attack
+  simulator — not mocked up.
 
 ### Removed
 - Unused `langchain` dependency from `aada-backend/pyproject.toml`. It was
