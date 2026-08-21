@@ -33,6 +33,10 @@ yet, so treat these as milestones rather than published versions.
   issues from before Ruff was ever actually wired in. #17 cleans those up.
 - Status badges in the README: Backend CI, Frontend build, Python 3.11,
   MIT license. Fills the placeholder that was there before CI existed.
+- Roadmap section in the README — 4 items, checked against the actual code
+  rather than copied from an old plan: no WebSocket/Redis/ARQ/Celery
+  anywhere in the backend, and the MCP tools exist but the analyst doesn't
+  call them itself yet.
 - `.github/workflows/docker-build.yml` — `docker compose build` on push/PR
   when backend, frontend, or the compose file changes.
 

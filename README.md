@@ -171,6 +171,23 @@ All four are from a real local run: `docker compose up -d --build` followed by `
 | Infra | Docker multi-stage builds, docker-compose, nginx |
 | Quality | pytest (188 tests), structlog (JSON logs), 42 REST endpoints |
 
+## Roadmap
+
+What's not built yet, roughly in the order it'd get tackled:
+
+- **Wire the MCP tools into the analyst's reasoning loop.** The 6 security
+  tools and the SOC analyst both exist, but the analyst doesn't call them
+  itself yet — it's a tool-calling agent, not just a single structured-output
+  request.
+- **WebSocket live event streaming**, so the dashboard updates as events and
+  alerts come in instead of polling.
+- **Redis for caching and pub/sub.** The integrations cache layer is already
+  built against a swappable interface (`TTLCache`/`NullCache`) for exactly
+  this — there's no live Redis client wired in yet, just the interface it'd
+  drop into.
+- **A background task queue (ARQ or Celery).** Detection runs and
+  long-running analysis currently happen on the request path.
+
 ## Contributing
 
 PRs welcome — see [CONTRIBUTING.md](CONTRIBUTING.md) for setup, conventions, and
