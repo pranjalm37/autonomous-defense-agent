@@ -33,6 +33,11 @@ yet, so treat these as milestones rather than published versions.
   issues from before Ruff was ever actually wired in. #17 cleans those up.
 - Status badges in the README: Backend CI, Frontend build, Python 3.11,
   MIT license. Fills the placeholder that was there before CI existed.
+- `.github/workflows/docker-build.yml` — `docker compose build` on push/PR
+  when backend, frontend, or the compose file changes. Doesn't need any
+  `.env` values or secrets: the `${VAR:?...}` required-variable checks in
+  `docker-compose.yml` only evaluate at `up`, not `build`. Verified locally
+  before pushing — both images build clean.
 - `aada-backend/poetry.lock` — never existed before, so every CI run
   re-resolved dependencies from scratch and caching had nothing reliable
   to key off. Generated with Poetry 2.4.1; `python-versions = "^3.11"` in

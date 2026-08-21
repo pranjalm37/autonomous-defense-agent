@@ -1,0 +1,25 @@
+name: Docker build
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "aada-backend/**"
+      - "aada-frontend/**"
+      - "docker-compose.yml"
+      - ".github/workflows/docker-build.yml"
+  pull_request:
+    paths:
+      - "aada-backend/**"
+      - "aada-frontend/**"
+      - "docker-compose.yml"
+      - ".github/workflows/docker-build.yml"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build backend and frontend images
+        run: docker compose build
