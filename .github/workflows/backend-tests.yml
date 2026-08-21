@@ -17,6 +17,8 @@ jobs:
     defaults:
       run:
         working-directory: aada-backend
+    env:
+      POETRY_VIRTUALENVS_IN_PROJECT: "true"
     steps:
       - uses: actions/checkout@v4
 
@@ -26,6 +28,13 @@ jobs:
 
       - name: Install Poetry
         run: pipx install poetry
+
+      - name: Cache Poetry virtualenv
+        uses: actions/cache@v4
+        with:
+          path: aada-backend/.venv
+          key: poetry-test-${{ runner.os }}-${{ hashFiles('aada-backend/poetry.lock') }}
+          restore-keys: poetry-test-${{ runner.os }}-
 
       - name: Install dependencies
         run: poetry install --no-interaction
@@ -46,6 +55,8 @@ jobs:
     defaults:
       run:
         working-directory: aada-backend
+    env:
+      POETRY_VIRTUALENVS_IN_PROJECT: "true"
     steps:
       - uses: actions/checkout@v4
 
@@ -55,6 +66,13 @@ jobs:
 
       - name: Install Poetry
         run: pipx install poetry
+
+      - name: Cache Poetry virtualenv
+        uses: actions/cache@v4
+        with:
+          path: aada-backend/.venv
+          key: poetry-lint-${{ runner.os }}-${{ hashFiles('aada-backend/poetry.lock') }}
+          restore-keys: poetry-lint-${{ runner.os }}-
 
       - name: Install dev dependencies
         run: poetry install --only dev --no-interaction

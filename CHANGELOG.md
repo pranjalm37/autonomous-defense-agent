@@ -33,6 +33,16 @@ yet, so treat these as milestones rather than published versions.
   issues from before Ruff was ever actually wired in. #17 cleans those up.
 - Status badges in the README: Backend CI, Frontend build, Python 3.11,
   MIT license. Fills the placeholder that was there before CI existed.
+- `aada-backend/poetry.lock` — never existed before, so every CI run
+  re-resolved dependencies from scratch and caching had nothing reliable
+  to key off. Generated with Poetry 2.4.1; `python-versions = "^3.11"` in
+  the lock's metadata matches the project constraint even though the
+  generating interpreter was 3.14 (Poetry resolves against declared
+  markers, not the host interpreter).
+- Poetry virtualenv caching in both `test` and `lint` jobs
+  (`POETRY_VIRTUALENVS_IN_PROJECT`, `actions/cache` keyed on the new
+  lock file's hash, separate keys per job since `lint` only installs
+  the dev dependency group).
 - `pytest-cov` + `[tool.coverage]` config, wired into the `test` job — runs
   with `--cov=app --cov-report=term-missing` and writes the coverage table
   to the job's step summary. Excludes `mcp_server/server.py` (the stdio
