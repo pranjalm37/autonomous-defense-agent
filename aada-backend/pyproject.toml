@@ -30,6 +30,7 @@ tiktoken = "^0.7.0"          # token counting for chunk sizing
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.0.0"
 pytest-asyncio = "^0.23.0"
+pytest-cov = "^5.0.0"
 ruff = "^0.4.0"              # lint + format
 
 [build-system]
@@ -38,6 +39,17 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
+
+[tool.coverage.run]
+source = ["app"]
+omit = ["app/mcp_server/server.py"]  # stdio entrypoint, not exercised by the offline suite
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "if TYPE_CHECKING:",
+    "raise NotImplementedError",
+]
 
 [tool.ruff]
 line-length = 120

@@ -33,6 +33,10 @@ yet, so treat these as milestones rather than published versions.
   issues from before Ruff was ever actually wired in. #17 cleans those up.
 - Status badges in the README: Backend CI, Frontend build, Python 3.11,
   MIT license. Fills the placeholder that was there before CI existed.
+- `pytest-cov` + `[tool.coverage]` config, wired into the `test` job — runs
+  with `--cov=app --cov-report=term-missing` and writes the coverage table
+  to the job's step summary. Excludes `mcp_server/server.py` (the stdio
+  entrypoint, not something the offline suite ever runs) from the report.
 - Four real screenshots in `docs/images/` (Triage dashboard, AI analysis,
   incident report, alerts list), replacing the "Coming soon" placeholder.
   Captured from an actual local run — `docker compose up -d --build`,
