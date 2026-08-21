@@ -22,4 +22,11 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Build backend and frontend images
+        env:
+          # docker-compose.yml's `${VAR:?...}` checks interpolate the whole
+          # file up front, so they fire even for a build-only invocation
+          # that never touches services.backend.environment. These are
+          # never used to run anything — just satisfy that check.
+          SECRET_KEY: ci-build-placeholder-not-a-real-secret
+          DEFAULT_ADMIN_PASSWORD: ci-build-placeholder
         run: docker compose build

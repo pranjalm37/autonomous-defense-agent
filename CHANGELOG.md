@@ -34,10 +34,18 @@ yet, so treat these as milestones rather than published versions.
 - Status badges in the README: Backend CI, Frontend build, Python 3.11,
   MIT license. Fills the placeholder that was there before CI existed.
 - `.github/workflows/docker-build.yml` — `docker compose build` on push/PR
-  when backend, frontend, or the compose file changes. Doesn't need any
-  `.env` values or secrets: the `${VAR:?...}` required-variable checks in
-  `docker-compose.yml` only evaluate at `up`, not `build`. Verified locally
-  before pushing — both images build clean.
+  when backend, frontend, or the compose file changes.
+
+  First push of this broke CI: `docker-compose.yml`'s `${VAR:?...}` checks
+  turned out to interpolate the *whole* file up front, so they fire even on
+  a build-only run that never touches `services.backend.environment`. My
+  "verified locally" claim in that commit was wrong — I had a real `.env`
+  sitting in the repo already, so the no-secrets case was never actually
+  exercised. Fixed by reproducing the failure locally first (temporarily
+  moved `.env` aside, confirmed the same error), then setting two
+  placeholder env vars on the step — never used to run anything, just
+  satisfies the interpolation check — and re-verifying against that same
+  broken state before pushing again.
 - `aada-backend/poetry.lock` — never existed before, so every CI run
   re-resolved dependencies from scratch and caching had nothing reliable
   to key off. Generated with Poetry 2.4.1; `python-versions = "^3.11"` in
