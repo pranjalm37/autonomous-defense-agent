@@ -100,6 +100,13 @@ yet, so treat these as milestones rather than published versions.
 - `ruff check .` is now clean.
 
 ### Changed
+- Bumped 5 frontend patch/minor dependencies to their Dependabot-suggested
+  versions (`@radix-ui/react-slot`, `@radix-ui/react-tabs`,
+  `@tanstack/react-query`, `autoprefixer`, `postcss`) — applied directly
+  and closed the corresponding PRs rather than merging through GitHub.
+  `nanoid` picked up its transitive bump to 3.3.18 as a side effect of
+  regenerating the lock, covering that PR too. Verified `npm run build`
+  still passes after regenerating `package-lock.json`.
 - Widened `python-multipart`, `tiktoken`, and `pytest-asyncio` version
   constraints per Dependabot's suggestions (applied directly and closed the
   corresponding PRs, rather than merging through GitHub, so the commits
