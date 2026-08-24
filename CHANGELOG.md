@@ -100,6 +100,12 @@ yet, so treat these as milestones rather than published versions.
 - `ruff check .` is now clean.
 
 ### Changed
+- Widened `python-multipart`, `tiktoken`, and `pytest-asyncio` version
+  constraints per Dependabot's suggestions (applied directly and closed the
+  corresponding PRs, rather than merging through GitHub, so the commits
+  stay authored as me — see the note on Dependabot PR triage below).
+  Resolved versions didn't actually move; `poetry.lock`'s content-hash is
+  the only real change.
 - Rewrote the README in plainer language.
 - Corrected the offline test count across README, TESTING.md, and
   ARCHITECTURE.md (docs disagreed with each other — 165 vs. 169 — and both
