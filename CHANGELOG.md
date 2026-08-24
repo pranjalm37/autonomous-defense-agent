@@ -33,6 +33,10 @@ yet, so treat these as milestones rather than published versions.
   issues from before Ruff was ever actually wired in. #17 cleans those up.
 - Status badges in the README: Backend CI, Frontend build, Python 3.11,
   MIT license. Fills the placeholder that was there before CI existed.
+- Troubleshooting section in the README — 8 entries, each checked against
+  the actual code/config rather than written generically (the bcrypt pin
+  comment, the chromadb version-match comment, `docker-entrypoint.sh`
+  swallowing failed migrations, `ALLOWED_HOSTS` defaults, etc.).
 - Roadmap section in the README — 4 items, checked against the actual code
   rather than copied from an old plan: no WebSocket/Redis/ARQ/Celery
   anywhere in the backend, and the MCP tools exist but the analyst doesn't

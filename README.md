@@ -120,6 +120,53 @@ pytest tests/ -q --ignore=tests/test_auth.py     # 188 offline tests
 cd aada-frontend && npm install && npm run dev   # http://localhost:5173
 ```
 
+## Troubleshooting
+
+**`required variable X is missing a value` on `docker compose up`.**
+You skipped `cp .env.example .env`, or didn't fill in `SECRET_KEY` /
+`DEFAULT_ADMIN_PASSWORD`. Both are required — see [Configuration](#configuration).
+
+**Port 8080 or 8000 already in use.**
+Something else on your machine is bound to it. Set `FRONTEND_PORT` /
+`BACKEND_PORT` in `.env` to something else and re-run `docker compose up -d`.
+
+**`pytest tests/` fails with a connection error.**
+You ran the full suite without `--ignore=tests/test_auth.py`. That one file is
+the DB-integration tier and needs a live Postgres; everything else runs fully
+offline. See [aada-backend/TESTING.md](aada-backend/TESTING.md).
+
+**`poetry install` fails or resolves oddly.**
+The project pins `python = "^3.11"` — if your default Python is older (or
+much newer and untested), Poetry may fail to resolve or pick an interpreter
+you didn't expect. Point it at a 3.11+ interpreter explicitly if you have
+more than one Python installed.
+
+**Bcrypt/passlib errors on login (`AttributeError` around `bcrypt.__about__`).**
+`pyproject.toml` pins `bcrypt` to `>=4.0,<4.1` on purpose — passlib 1.7.4
+reads an attribute bcrypt removed in 4.1. If you've loosened that pin,
+put it back.
+
+**ChromaDB connection or version-mismatch errors.**
+The `chromadb` Python client in `pyproject.toml` and the `chromadb/chroma`
+image tag in `docker-compose.yml` have to match. If you bump one, bump
+the other.
+
+**AI analysis reads as templated / generic, not like real GPT output.**
+Expected if `OPENAI_API_KEY` is unset — you're on the offline heuristic
+provider by design, not a bug. Set the key to get live OpenAI analysis.
+
+**Backend comes up "healthy" but the schema looks stale or wrong.**
+`docker-entrypoint.sh` runs `alembic upgrade head` but doesn't fail the
+container if that fails (`|| echo "continuing"`) — check the backend logs
+for `[entrypoint] alembic upgrade failed` if something's off after a model
+change.
+
+**401/CORS errors hitting the API from somewhere other than `localhost`.**
+`ALLOWED_HOSTS` and `ALLOWED_ORIGINS` default to localhost-only
+(`app/config.py`). Docker Compose already sets `ALLOWED_HOSTS=*` for you;
+running the backend directly with `uvicorn`, set both yourself if you're
+not on localhost.
+
 ## Screenshots
 
 **Triage dashboard** — event activity, open alerts by severity, the response pipeline for whichever alert is selected, and the attack simulator for staging scenarios.
