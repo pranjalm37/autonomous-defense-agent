@@ -100,6 +100,9 @@ yet, so treat these as milestones rather than published versions.
 - `ruff check .` is now clean.
 
 ### Changed
+- Widened `fastapi`, `structlog`, `openai`, and `asyncpg` version constraints
+  per Dependabot's suggestions — same pattern as the earlier batch: applied
+  directly, closed the corresponding PRs, resolved versions didn't move.
 - Bumped 5 frontend patch/minor dependencies to their Dependabot-suggested
   versions (`@radix-ui/react-slot`, `@radix-ui/react-tabs`,
   `@tanstack/react-query`, `autoprefixer`, `postcss`) — applied directly
