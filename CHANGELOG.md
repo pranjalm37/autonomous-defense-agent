@@ -100,6 +100,7 @@ yet, so treat these as milestones rather than published versions.
 - `ruff check .` is now clean.
 
 ### Changed
+- Bumped `actions/setup-python` to v7 (same direct-apply pattern).
 - Widened `fastapi`, `structlog`, `openai`, and `asyncpg` version constraints
   per Dependabot's suggestions — same pattern as the earlier batch: applied
   directly, closed the corresponding PRs, resolved versions didn't move.
