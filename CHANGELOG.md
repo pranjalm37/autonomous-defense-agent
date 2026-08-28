@@ -100,6 +100,14 @@ yet, so treat these as milestones rather than published versions.
 - `ruff check .` is now clean.
 
 ### Changed
+- Bumped `recharts` (2.12.7 → 3.10.1) and `react-router-dom`
+  (6.25.1 → 7.18.2) — both major versions. `react-router` isn't a direct
+  dependency, only `react-router-dom` is, so the lock file pulled the
+  matching transitive version automatically. Didn't trust CI alone for a
+  bump this size: rebuilt the Docker stack, logged in, clicked through
+  every page (Triage, Alerts, Investigate, Reports, Settings), and
+  checked the console — zero errors, chart and routing both render
+  exactly as before.
 - Bumped `actions/setup-python` to v7 (same direct-apply pattern).
 - Widened `fastapi`, `structlog`, `openai`, and `asyncpg` version constraints
   per Dependabot's suggestions — same pattern as the earlier batch: applied
