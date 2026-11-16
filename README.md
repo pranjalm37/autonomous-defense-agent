@@ -7,6 +7,8 @@ AADA is an AI-powered SOC agent. It takes in raw security logs, figures out what
 [![Python 3.11](https://img.shields.io/badge/python-3.11-blue)](https://www.python.org/downloads/release/python-3110/)
 [![License: MIT](https://img.shields.io/github/license/pranjalm37/autonomous-defense-agent)](LICENSE)
 
+**[Try the live demo →](https://pranjalm37.github.io/autonomous-defense-agent/)** Stage an attack in your browser and watch it get detected, scored and held for approval. No install; the detection rules and approval policy are ported to JavaScript with the same thresholds as the service.
+
 ---
 
 ## Overview

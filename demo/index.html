@@ -1,0 +1,570 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AADA live demo</title>
+<meta name="description" content="Stage an attack and watch AADA detect it, score it and ask before it acts. Runs entirely in your browser.">
+<style>
+  @font-face { font-family: "Instrument Sans"; font-weight: 400 700; font-display: swap; src: url("fonts/instrument-sans.woff2") format("woff2"); }
+  @font-face { font-family: "JetBrains Mono"; font-weight: 400 700; font-display: swap; src: url("fonts/jetbrains-mono.woff2") format("woff2"); }
+
+  /* Same tokens as the app (aada-frontend/src/index.css): monochrome, hue only for severity. */
+  :root {
+    color-scheme: dark;
+    --void: #0A0A0C; --pane: #101013; --pane2: #16161A; --rule: #25252C; --rule2: #34343D;
+    --ink: #F1F1F3; --ink2: #A0A0AB; --ink3: #6B6B77;
+    --crit: #FF5148; --high: #F0883E; --med: #D9B23C; --low: #5B93C4; --ok: #46B083;
+    --sans: "Instrument Sans", -apple-system, "Segoe UI", system-ui, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+  }
+  * { box-sizing: border-box; }
+  html { background: var(--void); }
+  body { margin: 0; background: var(--void); color: var(--ink); font: 14px/1.5 var(--sans); -webkit-font-smoothing: antialiased; }
+  ::selection { background: var(--ink); color: var(--void); }
+  a { color: var(--ink); text-underline-offset: 3px; text-decoration-color: var(--ink3); }
+  a:hover { text-decoration-color: var(--ink); }
+  button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+  :focus-visible { outline: 2px solid var(--ink); outline-offset: 1px; }
+  .mono { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+  .lbl { font: 500 10px var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--ink3); }
+  .page { max-width: 1240px; margin: 0 auto; border-inline: 1px solid var(--rule); min-height: 100vh; }
+
+  .bar { display: flex; justify-content: space-between; gap: 12px; padding: 10px 18px; border-bottom: 1px solid var(--rule); background: var(--pane); font: 12px var(--mono); color: var(--ink3); }
+  .bar b { color: var(--ink); font-weight: 500; }
+
+  .head { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 20px 32px; align-items: end; padding: 34px 18px 26px; border-bottom: 1px solid var(--rule); }
+  .head h1 { margin: 0 0 10px; font-size: clamp(28px, 4.2vw, 44px); line-height: 1.02; letter-spacing: -.03em; font-weight: 700; text-wrap: balance; }
+  .head p { margin: 0; color: var(--ink2); max-width: 62ch; font-size: 15px; }
+  .modes { display: flex; flex-direction: column; gap: 6px; }
+  .seg { display: flex; border: 1px solid var(--rule2); }
+  .seg button { padding: 7px 13px; font: 500 11px var(--mono); letter-spacing: .07em; text-transform: uppercase; color: var(--ink3); border-right: 1px solid var(--rule2); }
+  .seg button:last-child { border-right: 0; }
+  .seg button:hover { color: var(--ink); }
+  .seg button[aria-pressed="true"] { background: var(--ink); color: var(--void); font-weight: 700; }
+  #mode-hint { font: 11px var(--mono); color: var(--ink3); max-width: 44ch; min-height: 2.9em; }
+
+  .grid { display: grid; grid-template-columns: minmax(0, .82fr) minmax(0, 1.25fr) minmax(0, 1.1fr); border-bottom: 1px solid var(--rule); }
+  .col { min-width: 0; border-right: 1px solid var(--rule); display: flex; flex-direction: column; }
+  .col:last-child { border-right: 0; }
+  .ph { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 9px 18px; border-bottom: 1px solid var(--rule); background: var(--pane); }
+  .ph span:last-child { font: 11px var(--mono); color: var(--ink3); }
+
+  .sc { display: grid; grid-template-columns: 22px minmax(0, 1fr) auto; gap: 8px; align-items: center; width: 100%; text-align: left; padding: 10px 18px; border-bottom: 1px solid var(--rule); color: var(--ink2); }
+  .sc:hover { background: var(--pane); color: var(--ink); }
+  .sc i { font: normal 11px var(--mono); color: var(--ink3); }
+  .sc b { display: block; font-weight: 600; color: var(--ink); font-size: 14px; }
+  .sc small { display: block; font-size: 12px; color: var(--ink3); line-height: 1.35; }
+  .sc em { font: normal 700 10px var(--mono); letter-spacing: .08em; padding: 3px 7px; border: 1px solid var(--rule2); color: var(--ink3); }
+  .sc:hover em { border-color: var(--ink); color: var(--ink); }
+  .sc[aria-current="true"] { background: var(--pane2); }
+  .sc[aria-current="true"] em { background: var(--ink); color: var(--void); border-color: var(--ink); }
+  .fw { margin-top: auto; padding: 12px 18px 16px; border-top: 1px solid var(--rule); }
+  .fw ul { list-style: none; margin: 6px 0 0; padding: 0; font: 12px var(--mono); color: var(--ink2); }
+  .fw li.none { color: var(--ink3); }
+  .fw li b { color: var(--crit); font-weight: 500; }
+
+  #log { list-style: none; margin: 0; padding: 12px 18px; height: 252px; overflow-y: auto; font: 11.5px/1.75 var(--mono); color: var(--ink2); }
+  #log li { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  #log li.empty { color: var(--ink3); white-space: normal; }
+  #log .t { color: var(--ink3); }
+  #log .bad { color: var(--high); }
+  #log .worst { color: var(--crit); font-weight: 700; }
+  .meter { padding: 11px 18px 13px; border-block: 1px solid var(--rule); }
+  .meter-top { display: flex; justify-content: space-between; gap: 12px; font: 12px var(--mono); color: var(--ink2); }
+  .meter-top b { color: var(--ink); } .meter-top b.hot { color: var(--crit); }
+  .meter-track { position: relative; height: 6px; background: var(--rule); margin-top: 8px; }
+  #meter-fill { position: absolute; inset: 0 auto 0 0; width: 0; background: var(--ink2); transition: width .2s ease; }
+  #meter-fill.hot { background: var(--crit); }
+  #meter-mark { position: absolute; top: -3px; bottom: -3px; width: 1px; background: var(--ink); }
+  #alerts { list-style: none; margin: 0; padding: 0; }
+  #alerts li { display: grid; grid-template-columns: 3px 44px minmax(0, 1fr) auto; gap: 10px; align-items: center; border-bottom: 1px solid var(--rule); padding-right: 18px; }
+  #alerts li::before { content: ""; align-self: stretch; background: var(--sv); }
+  #alerts .sv { font: 700 10px var(--mono); letter-spacing: .08em; color: var(--sv); padding: 9px 0; }
+  #alerts .tt { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 13px; }
+  #alerts .rk { font: 700 12px var(--mono); }
+  #alerts li.empty { display: block; padding: 10px 18px; color: var(--ink3); font-size: 13px; }
+  #alerts li.empty::before { display: none; }
+
+  #resp { padding: 16px 18px 6px; }
+  .r-top { display: flex; gap: 14px; align-items: flex-start; }
+  .r-top h2 { margin: 0; font-size: 17px; line-height: 1.25; letter-spacing: -.015em; flex: 1; min-width: 0; text-wrap: balance; }
+  .r-risk { text-align: right; flex: none; }
+  .r-risk b { display: block; font: 700 34px/1 var(--mono); letter-spacing: -.04em; }
+  .chips { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 10px; }
+  .chips span { font: 11px var(--mono); padding: 2px 7px; border: 1px solid var(--rule2); color: var(--ink2); }
+  .chips span.sevchip { border-color: transparent; background: var(--pane2); font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
+  .r-idle { color: var(--ink3); margin: 0; }
+  .r-sum { margin: 12px 0 0; color: var(--ink2); font-size: 13.5px; }
+  #trace { list-style: none; margin: 0; padding: 4px 18px 6px; border-top: 1px solid var(--rule); }
+  #trace li { display: grid; grid-template-columns: 13px minmax(0, 1fr); gap: 10px; padding: 6px 0; color: var(--ink3); }
+  #trace li::before { content: ""; width: 11px; height: 11px; margin-top: 4px; border: 1px solid var(--ink3); }
+  #trace li.done { color: var(--ink); } #trace li.done::before { background: var(--ok); border-color: var(--ok); }
+  #trace li.now { color: var(--ink); } #trace li.now::before { border-color: var(--ink); }
+  #trace li.stop { color: var(--ink); } #trace li.stop::before { background: var(--crit); border-color: var(--crit); }
+  #trace small { display: block; font: 11px/1.5 var(--mono); color: var(--ink3); overflow-wrap: anywhere; }
+  .acts { display: flex; flex-wrap: wrap; gap: 8px; padding: 6px 18px 16px; }
+  .btn { padding: 8px 14px; font-weight: 600; font-size: 13px; border: 1px solid var(--rule2); color: var(--ink); }
+  .btn:hover { border-color: var(--ink2); }
+  .btn.pri { background: var(--ink); color: var(--void); border-color: var(--ink); }
+  .btn.dgr { color: var(--crit); }
+  .audit { border-top: 1px solid var(--rule); padding: 12px 18px 16px; margin-top: auto; }
+  .audit ol { list-style: none; margin: 6px 0 0; padding: 0; font: 11.5px/1.7 var(--mono); color: var(--ink2); }
+  .audit li { display: grid; grid-template-columns: 62px minmax(0, 1fr) auto; gap: 8px; }
+  .audit li span:first-child, .audit li span:last-child { color: var(--ink3); }
+  .audit li.none { display: block; color: var(--ink3); }
+
+  .sec { padding: 30px 18px; border-bottom: 1px solid var(--rule); }
+  .sec h2 { margin: 0 0 4px; font-size: 21px; letter-spacing: -.02em; }
+  .sec > p { margin: 0 0 18px; color: var(--ink2); max-width: 68ch; }
+  .tbl-wrap { overflow-x: auto; }
+  table { width: 100%; min-width: 640px; border-collapse: collapse; }
+  th { text-align: left; padding: 8px 14px 8px 0; border-bottom: 1px solid var(--rule2); }
+  td { padding: 10px 14px 10px 0; border-bottom: 1px solid var(--rule); vertical-align: top; color: var(--ink2); }
+  td:first-child { color: var(--ink); font-weight: 600; white-space: nowrap; }
+  td.mono { font-size: 12px; white-space: nowrap; }
+  .three { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border: 1px solid var(--rule); }
+  .three div { padding: 16px; border-right: 1px solid var(--rule); min-width: 0; }
+  .three div:last-child { border-right: 0; }
+  .three h3 { margin: 6px 0 6px; font-size: 16px; }
+  .three p { margin: 0; color: var(--ink2); font-size: 13.5px; }
+  .real { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: 28px; align-items: start; }
+  .real p { margin: 0 0 12px; color: var(--ink2); max-width: 56ch; }
+  .real img { display: block; width: 100%; height: auto; border: 1px solid var(--rule2); }
+  .real figure { margin: 0; } .real figcaption { font: 11px var(--mono); color: var(--ink3); margin-top: 6px; }
+  .foot { padding: 16px 18px 28px; font: 12px var(--mono); color: var(--ink3); }
+
+  @media (max-width: 940px) {
+    .head { grid-template-columns: 1fr; }
+    .grid { grid-template-columns: 1fr; }
+    .col { border-right: 0; border-bottom: 1px solid var(--rule); }
+    .col:last-child { border-bottom: 0; }
+    .three { grid-template-columns: 1fr; } .three div { border-right: 0; border-bottom: 1px solid var(--rule); } .three div:last-child { border-bottom: 0; }
+    .real { grid-template-columns: 1fr; }
+    #log { height: 200px; }
+  }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="bar"><span>aada / <b>live demo</b></span><a href="https://github.com/pranjalm37/autonomous-defense-agent">source on github</a></div>
+
+  <header class="head">
+    <div>
+      <h1>Stage an attack. Watch the response.</h1>
+      <p>AADA reads security logs, spots attacks, scores them and proposes a fix, then waits for a person before it touches anything. Pick an attack from the list. The detection rules and the approval policy on this page use the same thresholds and scoring as the real service, rewritten to run in your browser.</p>
+    </div>
+    <div class="modes">
+      <span class="lbl">Defense mode</span>
+      <div class="seg" id="modes" role="group" aria-label="Defense mode">
+        <button data-mode="monitor" aria-pressed="false">Monitor</button>
+        <button data-mode="assisted" aria-pressed="true">Assisted</button>
+        <button data-mode="autonomous" aria-pressed="false">Autonomous</button>
+      </div>
+      <div id="mode-hint"></div>
+    </div>
+  </header>
+
+  <main class="grid">
+    <section class="col" aria-label="Attack scenarios">
+      <div class="ph"><span class="lbl">Attacks</span><span>click to run</span></div>
+      <div id="scenarios"></div>
+      <div class="fw">
+        <span class="lbl">Firewall block list</span>
+        <ul id="blocked"></ul>
+      </div>
+    </section>
+
+    <section class="col" aria-label="Log stream and alerts">
+      <div class="ph"><span class="lbl" id="log-name">Incoming log</span><span id="log-count">0 events</span></div>
+      <ol id="log"></ol>
+      <div class="meter">
+        <div class="meter-top"><span id="meter-label">Nothing running</span><b id="meter-val"></b></div>
+        <div class="meter-track"><div id="meter-fill"></div><div id="meter-mark" hidden></div></div>
+      </div>
+      <div class="ph"><span class="lbl">Alerts raised</span><span id="alert-count">0</span></div>
+      <ol id="alerts"></ol>
+    </section>
+
+    <section class="col" aria-label="Response" aria-live="polite">
+      <div class="ph"><span class="lbl">Response</span><span id="resp-mode">assisted</span></div>
+      <div id="resp"></div>
+      <ol id="trace"></ol>
+      <div class="acts" id="acts"></div>
+      <div class="audit">
+        <span class="lbl">Audit trail</span>
+        <ol id="audit"></ol>
+      </div>
+    </section>
+  </main>
+
+  <section class="sec">
+    <h2>What each rule looks for</h2>
+    <p>Six rules read every event. Each one is a plain function with a threshold, so you can see exactly why an alert fired.</p>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th class="lbl">Rule</th><th class="lbl">Fires when</th><th class="lbl">MITRE ATT&amp;CK</th></tr></thead>
+        <tbody>
+          <tr><td>SSH brute force</td><td>5 or more failed SSH logins from one address inside 60 seconds. A successful login from the same address makes it critical.</td><td class="mono">T1110.001</td></tr>
+          <tr><td>Port scan</td><td>One address is refused on 15 or more ports, or on 10 or more hosts, inside 60 seconds.</td><td class="mono">T1046</td></tr>
+          <tr><td>Credential stuffing</td><td>Failed logins against 10 or more different usernames from one address inside 5 minutes, at most 3 tries each.</td><td class="mono">T1110.004</td></tr>
+          <tr><td>Impossible travel</td><td>The same account logs in from two places more than 500 km apart, faster than 900 km/h could cover.</td><td class="mono">T1078</td></tr>
+          <tr><td>Privilege escalation</td><td>A sudo command reads the shadow file, edits sudoers, sets a setuid bit, changes accounts or opens a root shell.</td><td class="mono">T1548.003</td></tr>
+          <tr><td>Malware indicators</td><td>A known-bad file hash, traffic to a known command-and-control address, an IDS malware signature, encoded PowerShell, or Office starting a shell.</td><td class="mono">T1204 · T1071</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="sec">
+    <h2>Who is allowed to act</h2>
+    <p>Analysis can be uncertain. The authority to act is a fixed policy you can read, set by the mode switch at the top.</p>
+    <div class="three">
+      <div><span class="lbl">Monitor</span><h3>Watch only</h3><p>Every proposed fix is recorded as a recommendation. Nothing is queued and nothing runs.</p></div>
+      <div><span class="lbl">Assisted</span><h3>A person approves</h3><p>Every proposed fix waits in a queue until someone approves or denies it. This is the default.</p></div>
+      <div><span class="lbl">Autonomous</span><h3>Small, reversible fixes run</h3><p>Blocking an address runs on its own when confidence is at least 0.80 and risk at least 60. Isolating a host always goes to a person.</p></div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <h2>What is real here</h2>
+    <div class="real">
+      <div>
+        <p>This page has no server. The attacks are synthetic log lines, the firewall is a list in memory, and risk comes from the detection score alone.</p>
+        <p>The real project is a FastAPI and PostgreSQL service with a React console. It adds an LLM analyst grounded in a security knowledge base, threat-intel lookups, incident reports, and an audit log in the database. Its remediation backends are simulations too, by design.</p>
+        <p><a href="https://github.com/pranjalm37/autonomous-defense-agent">Read the code on GitHub</a>, or run the whole thing with <span class="mono">docker compose up</span>.</p>
+      </div>
+      <figure>
+        <img src="app-screenshot.png" width="2880" height="1800" loading="lazy" alt="The AADA triage console: an event timeline, a list of open alerts by severity, and the response pipeline for the selected alert.">
+        <figcaption>The actual console, from a local run.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <div class="foot">AADA · MIT licensed · educational project</div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ── Scoring: same model as aada-backend/app/services/detection/scoring.py ── */
+  var BASE = { info: 10, low: 25, medium: 45, high: 65, critical: 80 };
+  function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+  function riskScore(sev, conf, o) {
+    o = o || {};
+    var s = BASE[sev] * clamp(conf, 0, 1) * (1 + clamp(o.vol || 0, 0, 1)) * clamp(o.asset || 1, 0.5, 1.6) + (o.bonus || 0);
+    return Math.round(clamp(s, 0, 100));
+  }
+  function band(score) { return score >= 85 ? "critical" : score >= 65 ? "high" : score >= 40 ? "medium" : score >= 20 ? "low" : "info"; }
+  function overThreshold(observed, thr, sat) {
+    if (observed <= thr) return 0;
+    sat = sat || thr * 4;
+    return clamp((observed - thr) / Math.max(sat - thr, 1), 0, 1);
+  }
+  function isPrivate(ip) { return /^(10\.|127\.|169\.254\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.)/.test(ip || ""); }
+  function isExternal(ip) { return !!ip && !isPrivate(ip); }
+  function round2(n) { return Math.round(n * 100) / 100; }
+  function uniq(a) { return a.filter(function (v, i) { return a.indexOf(v) === i; }); }
+  function groupBy(list, key) { var m = {}; list.forEach(function (e) { var k = e[key]; if (k) (m[k] = m[k] || []).push(e); }); return m; }
+  function peakInWindow(evts, win) {          /* most events inside any `win`-second span */
+    var best = 0;
+    evts.forEach(function (a) { var n = evts.filter(function (b) { return b.t >= a.t && b.t - a.t <= win; }).length; if (n > best) best = n; });
+    return best;
+  }
+
+  /* ── Detection rules: ports of app/services/detection/rules/*.py ── */
+  var GEO = { "8.8.8.8": [37.4056, -122.0775, "Mountain View"], "91.198.174.192": [52.3676, 4.9041, "Amsterdam"] };
+  var BAD_HASH = "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", BAD_IP = "45.77.12.9";
+  var SENSITIVE = [
+    [/\/etc\/shadow|\/etc\/gshadow/i, "read shadow file (credential dumping)", "T1003"],
+    [/\/etc\/sudoers|visudo/i, "modify sudoers", "T1548.003"],
+    [/chmod\s+(?:[ug]*\+s|4\d{3})/i, "set setuid bit", "T1548"],
+    [/useradd|usermod|passwd\s+\w/i, "manipulate accounts", "T1078"],
+    [/\b(?:nc|ncat|socat)\b/i, "launch network/reverse shell", "T1059"],
+    [/(?:\/bin\/|\/usr\/bin\/)?(?:bash|sh|zsh)\b/i, "spawn a root shell", "T1059"]
+  ];
+  function km(a, b) {
+    var R = 6371, rad = Math.PI / 180, dLat = (b[0] - a[0]) * rad, dLon = (b[1] - a[1]) * rad;
+    var h = Math.pow(Math.sin(dLat / 2), 2) + Math.cos(a[0] * rad) * Math.cos(b[0] * rad) * Math.pow(Math.sin(dLon / 2), 2);
+    return 2 * R * Math.asin(Math.sqrt(h));
+  }
+
+  var RULES = {
+    ssh_brute_force: function (events) {
+      var out = [], by = groupBy(events.filter(function (e) { return e.type === "ssh_login_failed" || e.type === "ssh_login_success"; }), "src");
+      Object.keys(by).forEach(function (ip) {
+        var fails = by[ip].filter(function (e) { return e.type === "ssh_login_failed"; }), peak = peakInWindow(fails, 60);
+        if (peak < 5) return;
+        var won = by[ip].some(function (e) { return e.type === "ssh_login_success"; }), ext = isExternal(ip);
+        var conf = Math.min(0.95, 0.6 + 0.05 * (peak - 5)), base = ext ? "high" : "medium", bonus = 0;
+        if (won) { base = "critical"; conf = 0.97; bonus = 15; }
+        var score = riskScore(base, conf, { vol: overThreshold(peak, 5), asset: ext ? 1.25 : 1, bonus: bonus });
+        out.push({ key: "ssh:" + ip, rule: "ssh_brute_force", threat: "brute_force", src: ip, host: by[ip][0].host, user: won ? "root" : null,
+          title: "SSH brute force " + (won ? "succeeded after" : "detected:") + " " + peak + " failed logins from " + ip,
+          sev: won ? "critical" : band(score), risk: score, conf: round2(conf), mitre: ["T1110", "T1110.001"].concat(won ? ["T1078"] : []), n: by[ip].length });
+      });
+      return out;
+    },
+    port_scan: function (events) {
+      var out = [], by = groupBy(events.filter(function (e) { return e.type === "connection_denied"; }), "src");
+      Object.keys(by).forEach(function (ip) {
+        var ports = uniq(by[ip].map(function (e) { return e.port; })).length, hosts = uniq(by[ip].map(function (e) { return e.dst; })).length;
+        var vertical = ports >= 15, horizontal = hosts >= 10;
+        if (!vertical && !horizontal) return;
+        var spread = vertical ? ports : hosts, thr = vertical ? 15 : 10, ext = isExternal(ip);
+        var conf = Math.min(0.9, 0.55 + 0.02 * (spread - thr));
+        var score = riskScore("medium", conf, { vol: overThreshold(spread, thr, thr * 6), asset: ext ? 1.25 : 0.9 });
+        out.push({ key: "scan:" + ip, rule: "port_scan", threat: "reconnaissance", src: ip, host: by[ip][0].dst, user: null,
+          title: (vertical ? "Vertical" : "Horizontal") + " port scan from " + ip + " (" + ports + " ports / " + hosts + " hosts)",
+          sev: band(score), risk: score, conf: round2(conf), mitre: ["T1046", "T1595"], n: by[ip].length });
+      });
+      return out;
+    },
+    credential_stuffing: function (events) {
+      var out = [], by = groupBy(events.filter(function (e) { return e.type === "login_failed"; }), "src");
+      Object.keys(by).forEach(function (ip) {
+        var perUser = groupBy(by[ip], "user"), users = Object.keys(perUser);
+        var maxTries = Math.max.apply(null, users.map(function (u) { return perUser[u].length; }));
+        if (users.length < 10 || maxTries > 3) return;
+        var ext = isExternal(ip), conf = Math.min(0.93, 0.6 + 0.015 * (users.length - 10));
+        var score = riskScore(ext ? "high" : "medium", conf, { vol: overThreshold(users.length, 10), asset: ext ? 1.3 : 1 });
+        out.push({ key: "stuff:" + ip, rule: "credential_stuffing", threat: "credential_stuffing", src: ip, host: null, user: null,
+          title: "Credential stuffing from " + ip + " — " + users.length + " accounts targeted",
+          sev: band(score), risk: score, conf: round2(conf), mitre: ["T1110.004", "T1110.003"], n: by[ip].length });
+      });
+      return out;
+    },
+    impossible_travel: function (events) {
+      var out = [], by = groupBy(events.filter(function (e) { return e.type === "login_success" && GEO[e.src]; }), "user");
+      Object.keys(by).forEach(function (user) {
+        for (var i = 1; i < by[user].length; i++) {
+          var a = by[user][i - 1], b = by[user][i], dist = km(GEO[a.src], GEO[b.src]), hours = Math.max((b.t - a.t) / 3600, 1 / 3600), speed = dist / hours;
+          if (dist < 500 || speed <= 900) continue;
+          var conf = Math.min(0.97, 0.7 + 0.1 * Math.min(speed / 900 - 1, 2.5));
+          var score = riskScore("high", conf, { vol: Math.min(speed / 900 / 5, 1), asset: 1.3, bonus: 10 });
+          out.push({ key: "travel:" + user, rule: "impossible_travel", threat: "account_takeover", src: b.src, host: null, user: user,
+            title: "Impossible travel for '" + user + "': " + GEO[a.src][2] + " → " + GEO[b.src][2],
+            sev: band(score), risk: score, conf: round2(conf), mitre: ["T1078"], n: 2, speed: Math.round(speed), dist: Math.round(dist) });
+        }
+      });
+      return out;
+    },
+    privilege_escalation: function (events) {
+      var out = [];
+      events.filter(function (e) { return e.type === "sudo_command"; }).forEach(function (e, i) {
+        var hit = SENSITIVE.filter(function (s) { return s[0].test(e.cmd); })[0];
+        if (!hit) return;
+        var score = riskScore(hit[2] === "T1003" ? "critical" : "high", 0.85, { asset: 1.2, bonus: 8 });
+        out.push({ key: "sudo:" + i, rule: "privilege_escalation", threat: "privilege_escalation", src: null, host: e.host, user: e.user,
+          title: "Privileged sudo by '" + e.user + "' — " + hit[1],
+          sev: band(score), risk: score, conf: 0.85, mitre: uniq(["T1548.003", hit[2]]), n: 1 });
+      });
+      return out;
+    },
+    malware_indicators: function (events) {
+      var out = [];
+      function add(e, k, title, sev, conf, mitre, bonus) {
+        out.push({ key: "mal:" + k, rule: "malware_indicators", threat: "malware", src: null, host: e.host, user: e.user || null,
+          title: title, sev: sev, risk: riskScore(sev, conf, { asset: 1.2, bonus: bonus || 0 }), conf: conf, mitre: mitre, n: 1 });
+      }
+      events.forEach(function (e) {
+        if (e.hash === BAD_HASH) add(e, "hash", "Known-malware hash on " + e.host, "critical", 0.96, ["T1204.002", "T1204"], 10);
+        if (e.dst === BAD_IP) add(e, "c2", "C2 connection to known-bad IP " + e.dst, "critical", 0.92, ["T1071", "T1071.001"], 10);
+        if (e.signature && /cobalt|beacon|trojan/i.test(e.signature)) add(e, "sig", "Malware signature fired: " + e.signature, /beacon|cobalt/i.test(e.signature) ? "critical" : "high", 0.88, ["T1071"]);
+        if (e.proc === "powershell.exe" && /-e(?:nc|ncodedcommand)?\s+[A-Za-z0-9+\/=]{8,}/i.test(e.cmd || "")) add(e, "ps", "Obfuscated PowerShell on " + e.host, "high", 0.78, ["T1059.001", "T1059"]);
+        if (e.parent === "winword.exe" && e.proc === "powershell.exe") add(e, "macro", "Office macro behavior on " + e.host + ": " + e.parent + " → " + e.proc, "high", 0.82, ["T1204.002", "T1059"]);
+        if (e.file && /\.(scr|pif|vbs|jse?)$/i.test(e.file)) add(e, "ext", "Suspicious file dropped on " + e.host + ": " + e.file, "medium", 0.6, ["T1204.002"]);
+      });
+      return out;
+    }
+  };
+  function detect(events) {
+    var all = [];
+    Object.keys(RULES).forEach(function (r) { all = all.concat(RULES[r](events)); });
+    return all.sort(function (a, b) { return b.risk - a.risk; });
+  }
+
+  /* ── Recommended action per threat type (ai_analyst/llm.py) and policy (decision/policy.py) ── */
+  var ACTION = {
+    brute_force: ["block_ip", "Block the attacking source IP"], credential_stuffing: ["block_ip", "Block source IP and force password resets"],
+    reconnaissance: ["monitor", "Monitor the scanning source and tighten firewall rules"], account_takeover: ["revoke_session", "Revoke sessions and reset the affected account"],
+    privilege_escalation: ["isolate_host", "Isolate the host and review sudoers"], malware: ["isolate_host", "Isolate the host and quarantine the artifact"]
+  };
+  var AUTO_SAFE = ["block_ip", "revoke_session", "quarantine_file", "monitor", "investigate"];
+  function disposition(mode, risk, conf, actionType) {
+    if (mode === "monitor") return ["monitor_only", "Monitor mode: recorded as a recommendation only."];
+    if (mode === "assisted") return ["require_approval", "Assisted mode: queued for human approval."];
+    if (conf < 0.5 || risk < 45) return ["monitor_only", "Autonomous: below the action threshold (confidence " + conf.toFixed(2) + " or risk " + risk + ")."];
+    if (AUTO_SAFE.indexOf(actionType) < 0) return ["escalate", "High-impact action: needs human approval even in autonomous mode."];
+    if (conf >= 0.8 && risk >= 60) return ["auto_execute", "Autonomous: reversible, low-impact action with confidence " + conf.toFixed(2) + " and risk " + risk + "."];
+    return ["require_approval", "Autonomous: below the auto-execute bar (0.80 / 60), routed to a human."];
+  }
+
+  /* ── Scenarios: synthetic events with a display line each ── */
+  var USERS = ["root", "admin", "oracle", "postgres", "test", "deploy", "ubuntu", "git"];
+  function ssh(ip) {
+    var ev = USERS.map(function (u, i) { return { t: i * 3, type: "ssh_login_failed", src: ip, host: "web01", user: u, cls: "bad", line: "web01 sshd[" + (12000 + i) + "]: Failed password for invalid user " + u + " from " + ip + " port " + (54000 + i) }; });
+    ev.push({ t: 27, type: "ssh_login_success", src: ip, host: "web01", user: "root", cls: "worst", line: "web01 sshd[12099]: Accepted password for root from " + ip + " port 54399" });
+    return ev;
+  }
+  var SCENARIOS = [
+    { id: "ssh", name: "SSH brute force", sub: "8 failed logins, then one that works", log: "auth.log · web01", gap: 330, events: function () { return ssh("185.220.101.34"); },
+      meter: function (ev) { var n = ev.filter(function (e) { return e.type === "ssh_login_failed"; }).length; return ["Failed SSH logins, last 60 s", n, 5, n + " / 5"]; } },
+    { id: "scan", name: "Port scan", sub: "one address tries 24 ports", log: "firewall", gap: 130, events: function () {
+        var ev = []; for (var i = 0; i < 24; i++) ev.push({ t: i, type: "connection_denied", src: "45.155.205.233", dst: "10.0.0.5", port: 1000 + i, cls: i >= 14 ? "bad" : "", line: "fw DENY tcp 45.155.205.233 -> 10.0.0.5:" + (1000 + i) }); return ev; },
+      meter: function (ev) { var n = uniq(ev.map(function (e) { return e.port; })).length; return ["Distinct ports refused, last 60 s", n, 15, n + " / 15"]; } },
+    { id: "stuff", name: "Credential stuffing", sub: "18 usernames from one address", log: "sso login events", gap: 170, events: function () {
+        var ev = []; for (var i = 0; i < 18; i++) ev.push({ t: i * 2, type: "login_failed", src: "193.32.162.70", user: "user" + String(i).padStart(3, "0"), cls: i >= 9 ? "bad" : "", line: "sso login_failed user=user" + String(i).padStart(3, "0") + " src=193.32.162.70" }); return ev; },
+      meter: function (ev) { var n = uniq(ev.map(function (e) { return e.user; })).length; return ["Usernames tried from one address, last 5 min", n, 10, n + " / 10"]; } },
+    { id: "travel", name: "Impossible travel", sub: "one account, two continents, 8 minutes", log: "cloud sign-ins", gap: 900, events: function () {
+        return [ { t: 0, type: "login_success", src: "8.8.8.8", user: "a.wren", cls: "", line: "cloud login_success user=a.wren src=8.8.8.8 (Mountain View, US)" },
+                 { t: 480, type: "login_success", src: "91.198.174.192", user: "a.wren", cls: "worst", line: "cloud login_success user=a.wren src=91.198.174.192 (Amsterdam, NL)" } ]; },
+      meter: function (ev, al) { var a = al[0]; return a ? ["Speed needed between the two sign-ins", a.speed, 900, a.speed.toLocaleString("en-US") + " km/h, limit 900"] : ["Speed needed between the two sign-ins", 0, 900, "one sign-in so far"]; } },
+    { id: "sudo", name: "Privilege escalation", sub: "sudo reads the password hashes", log: "auth.log · web01", gap: 900, events: function () {
+        return [ { t: 0, type: "session", host: "web01", user: "jdoe", cls: "", line: "web01 sshd[8801]: Accepted publickey for jdoe from 10.20.4.55" },
+                 { t: 31, type: "sudo_command", host: "web01", user: "jdoe", cmd: "/bin/cat /etc/shadow", cls: "worst", line: "web01 sudo: jdoe : USER=root ; COMMAND=/bin/cat /etc/shadow" } ]; },
+      meter: function (ev, al) { return ["Sensitive sudo commands", al.length, 1, al.length + " / 1"]; } },
+    { id: "malware", name: "Malware / C2 beacon", sub: "a Word document starts PowerShell", log: "edr + ids", gap: 800, events: function () {
+        return [ { t: 0, type: "process_creation", host: "WIN-FINANCE-07", user: "jdoe", proc: "powershell.exe", parent: "winword.exe", cmd: "powershell -enc SQBFAFgAIAAoAE4AZQB3AC0A", cls: "bad", line: "edr process_creation WIN-FINANCE-07 winword.exe -> powershell.exe -enc SQBFAFgA..." },
+                 { t: 15, type: "file_quarantine", host: "WIN-FINANCE-07", user: "jdoe", hash: BAD_HASH, file: "C:\\Users\\jdoe\\Downloads\\invoice.scr", cls: "bad", line: "edr file_quarantine WIN-FINANCE-07 invoice.scr sha256=e3b0c442..." },
+                 { t: 30, type: "ids_alert", host: "WIN-FINANCE-07", signature: "ET TROJAN Cobalt Strike Beacon", dst: BAD_IP, cls: "worst", line: "ids ET TROJAN Cobalt Strike Beacon WIN-FINANCE-07 -> 45.77.12.9:443" } ]; },
+      meter: function (ev, al) { return ["Indicators matched", al.length, 1, al.length + " of 6 checks"]; } },
+    { id: "inside", name: "Brute force from inside", sub: "same attack, from 10.0.0.9", log: "auth.log · web01", gap: 330, events: function () { return ssh("10.0.0.9"); },
+      meter: function (ev) { var n = ev.filter(function (e) { return e.type === "ssh_login_failed"; }).length; return ["Failed SSH logins, last 60 s", n, 5, n + " / 5"]; } }
+  ];
+
+  var MODE_HINT = {
+    monitor: "Watch only. Fixes are recorded as recommendations and nothing runs.",
+    assisted: "Every proposed fix waits for you to approve or deny it.",
+    autonomous: "Reversible, low-impact fixes run on their own when confidence and risk are high. Everything else still waits for you."
+  };
+  var SEV_ABBR = { critical: "CRIT", high: "HIGH", medium: "MED", low: "LOW", info: "INFO" };
+  var SEV_COLOR = { critical: "var(--crit)", high: "var(--high)", medium: "var(--med)", low: "var(--low)", info: "var(--ink3)" };
+
+  var S = { mode: "assisted", sc: null, events: [], alerts: [], stage: 0, decision: null, action: null, audit: [], blocked: [], run: 0, t0: 0 };
+  function $(id) { return document.getElementById(id); }
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+  function clock(ms) { return new Date(ms).toTimeString().slice(0, 8); }
+  function audit(verb, who, detail) { S.audit.unshift({ at: clock(Date.now()), verb: verb, who: who, detail: detail }); }
+  function top() { return S.alerts[0] || null; }
+
+  /* ── The run: ingest → detect → analyze → decide → (approve) → respond ── */
+  function start(id) {
+    var sc = SCENARIOS.filter(function (s) { return s.id === id; })[0], evs = sc.events(), my = ++S.run, i = 0;
+    var span = evs[evs.length - 1].t;
+    S.sc = sc; S.events = []; S.alerts = []; S.stage = 1; S.decision = null; S.action = null; S.audit = []; S.t0 = Date.now() - span * 1000;
+    audit("simulation.run", "you", sc.name);
+    render();
+    (function next() {
+      if (my !== S.run) return;
+      S.events.push(evs[i++]); S.alerts = detect(S.events); render();
+      if (i < evs.length) return setTimeout(next, sc.gap);
+      S.stage = 2; audit("detection.run", "system", S.events.length + " events, " + S.alerts.length + " alert" + (S.alerts.length === 1 ? "" : "s")); render();
+      if (!top()) return;
+      setTimeout(function () { if (my !== S.run) return; S.stage = 3; audit("ai.analysis", "system", top().rule); render(); }, 650);
+      setTimeout(function () { if (my !== S.run) return; decide(); }, 1300);
+    })();
+  }
+  function decide() {
+    var a = top(), act = ACTION[a.threat], d = disposition(S.mode, a.risk, a.conf, act[0]);
+    var target = act[0] === "block_ip" ? a.src : act[0] === "revoke_session" ? a.user : act[0] === "isolate_host" ? a.host : (a.src || a.host);
+    S.stage = 4; S.decision = { disp: d[0], why: d[1], mode: S.mode };
+    S.action = { type: act[0], label: act[1], target: target, status: "advisory", msg: "" };
+    audit("ai.decision", "system", d[0] + " · risk " + a.risk);
+    if (act[0] === "monitor" || d[0] === "monitor_only") { S.action.status = "advisory"; }
+    else if (d[0] === "auto_execute") { execute("system"); return; }
+    else { S.action.status = "pending"; }
+    render();
+  }
+  /* response/handlers/block_ip.py refuses internal addresses; only block_ip has a handler among these actions */
+  function execute(who) {
+    var x = S.action;
+    if (who === "you") audit("action.approved", "you", x.type + " " + x.target);
+    if (x.type !== "block_ip") { x.status = "handoff"; x.msg = "no handler for " + x.type + " in this build, so a person carries it out"; audit("action.executed", who, "failed: no handler for " + x.type); }
+    else if (isPrivate(x.target)) { x.status = "refused"; x.msg = "blocked by safety guardrail: refusing to block internal/private address " + x.target; audit("action.executed", who, "failed: guardrail refused " + x.target); }
+    else { x.status = "done"; x.msg = "Blocked " + x.target; if (S.blocked.indexOf(x.target) < 0) S.blocked.push(x.target); audit("action.executed", who, "Blocked " + x.target); }
+    render();
+  }
+  function deny() { S.action.status = "denied"; S.action.msg = "Denied. Nothing was changed."; audit("action.rejected", "you", S.action.type + " " + S.action.target); render(); }
+  function rollback() {
+    var x = S.action; S.blocked = S.blocked.filter(function (ip) { return ip !== x.target; });
+    x.status = "rolled_back"; x.msg = "Unblocked " + x.target; audit("action.rolled_back", "you", "Unblocked " + x.target); render();
+  }
+
+  /* ── Rendering ── */
+  function render() {
+    var sc = S.sc, a = top();
+
+    $("scenarios").innerHTML = SCENARIOS.map(function (s, i) {
+      var on = sc && sc.id === s.id, busy = on && S.stage === 1;
+      return '<button class="sc" data-id="' + s.id + '" aria-current="' + (on ? "true" : "false") + '"><i>' + String(i + 1).padStart(2, "0") + "</i><span><b>" + esc(s.name) + "</b><small>" + esc(s.sub) + "</small></span><em>" + (busy ? "RUNNING" : on ? "AGAIN" : "RUN") + "</em></button>";
+    }).join("");
+    $("blocked").innerHTML = S.blocked.length ? S.blocked.map(function (ip) { return "<li><b>DENY</b> " + esc(ip) + "</li>"; }).join("") : '<li class="none">empty</li>';
+
+    [].forEach.call(document.querySelectorAll("#modes button"), function (b) { b.setAttribute("aria-pressed", b.dataset.mode === S.mode ? "true" : "false"); });
+    $("mode-hint").textContent = MODE_HINT[S.mode];
+    $("resp-mode").textContent = S.decision ? "decided in " + S.decision.mode + " mode" : S.mode + " mode";
+
+    $("log-name").textContent = sc ? sc.log : "Incoming log";
+    $("log-count").textContent = S.events.length + " event" + (S.events.length === 1 ? "" : "s");
+    var log = $("log");
+    log.innerHTML = S.events.length ? S.events.map(function (e) { return '<li class="' + e.cls + '"><span class="t">' + clock(S.t0 + e.t * 1000) + "</span> " + esc(e.line) + "</li>"; }).join("")
+      : '<li class="empty">No traffic yet. Run an attack from the list and its log lines arrive here one at a time.</li>';
+    log.scrollTop = log.scrollHeight;
+
+    var m = sc ? sc.meter(S.events, S.alerts) : null, fill = $("meter-fill"), mark = $("meter-mark");
+    $("meter-label").textContent = m ? m[0] : "Nothing running";
+    $("meter-val").textContent = m ? m[3] : ""; $("meter-val").className = m && m[1] >= m[2] ? "hot" : "";
+    if (m) { var max = Math.max(m[2] * 1.8, m[1]); fill.style.width = clamp(m[1] / max * 100, 0, 100) + "%"; fill.className = m[1] >= m[2] ? "hot" : ""; mark.hidden = false; mark.style.left = (m[2] / max * 100) + "%"; }
+    else { fill.style.width = "0"; mark.hidden = true; }
+
+    $("alert-count").textContent = S.alerts.length;
+    $("alerts").innerHTML = S.alerts.length ? S.alerts.map(function (x) {
+      return '<li style="--sv:' + SEV_COLOR[x.sev] + '"><span class="sv">' + SEV_ABBR[x.sev] + '</span><span class="tt" title="' + esc(x.title) + '">' + esc(x.title) + '</span><span class="rk">' + x.risk + "</span></li>";
+    }).join("") : '<li class="empty">' + (sc ? "No rule has fired yet." : "None.") + "</li>";
+
+    var resp = $("resp");
+    if (!a) resp.innerHTML = '<p class="r-idle">' + (sc ? "Reading the log. Nothing has crossed a threshold yet." : "Pick an attack to see how it is handled.") + "</p>";
+    else {
+      var sum = S.stage >= 3 ? '<p class="r-sum">A ' + a.sev + " " + a.threat.replace(/_/g, " ") + " event was detected" + (a.src ? " from " + esc(a.src) : "") + (a.user ? " affecting " + esc(a.user) : "") + (a.host && !a.src ? " on " + esc(a.host) : "") + ". " + a.n + " supporting log event" + (a.n === 1 ? " was" : "s were") + " correlated. Review and containment are recommended.</p>" : "";
+      resp.innerHTML = '<div class="r-top"><h2>' + esc(a.title) + '</h2><div class="r-risk"><b style="color:' + SEV_COLOR[a.sev] + '">' + a.risk + '</b><span class="lbl">Risk</span></div></div>' +
+        '<div class="chips"><span class="sevchip" style="color:' + SEV_COLOR[a.sev] + '">' + a.sev + "</span><span>confidence " + a.conf.toFixed(2) + "</span>" + a.mitre.map(function (t) { return "<span>" + t + "</span>"; }).join("") + "</div>" + sum;
+    }
+
+    var x = S.action, rows = [];
+    if (sc) {
+      rows.push([S.events.length ? "done" : "now", "Ingested", S.events.length + " log line" + (S.events.length === 1 ? "" : "s") + " parsed"]);
+      rows.push([a ? "done" : S.stage >= 2 ? "" : "now", "Detected", a ? a.rule + (S.alerts.length > 1 ? " and " + (S.alerts.length - 1) + " more" : "") : S.stage >= 2 ? "no rule fired" : "six rules reading"]);
+      rows.push([S.stage >= 3 ? "done" : "", "Analyzed", S.stage >= 3 ? "summary, technique mapping, recommended fix" : "waiting"]);
+      rows.push([S.stage >= 4 ? "done" : "", "Decided", S.decision ? S.decision.why : "waiting"]);
+      if (x) {
+        var st = x.status, cls = st === "done" || st === "rolled_back" ? "done" : st === "refused" ? "stop" : st === "pending" ? "now" : "";
+        var head = st === "pending" ? "Waiting for you" : st === "done" ? "Executed" : st === "refused" ? "Refused" : st === "denied" ? "Denied" : st === "rolled_back" ? "Rolled back" : st === "handoff" ? "Handed to a person" : "Recommendation only";
+        rows.push([cls, head, x.msg || (x.label + (x.target ? " (" + x.type + " " + x.target + ")" : ""))]);
+      }
+    }
+    $("trace").innerHTML = rows.map(function (r) { return '<li class="' + r[0] + '"><span>' + esc(r[1]) + "<small>" + esc(r[2]) + "</small></span></li>"; }).join("");
+
+    $("acts").innerHTML = !x ? "" : x.status === "pending" ? '<button class="btn pri" data-act="approve">Approve and run</button><button class="btn dgr" data-act="deny">Deny</button>'
+      : x.status === "done" ? '<button class="btn" data-act="rollback">Roll back</button>' : "";
+
+    $("audit").innerHTML = S.audit.length ? S.audit.map(function (e) { return "<li><span>" + e.at + "</span><span>" + esc(e.verb) + " · " + esc(e.detail) + "</span><span>" + e.who + "</span></li>"; }).join("") : '<li class="none">Every step lands here, with who did it.</li>';
+  }
+
+  document.addEventListener("click", function (ev) {
+    var t = ev.target.closest("[data-id],[data-mode],[data-act]"); if (!t) return;
+    if (t.dataset.id) return start(t.dataset.id);
+    if (t.dataset.mode) { S.mode = t.dataset.mode; return render(); }
+    if (t.dataset.act === "approve") return execute("you");
+    if (t.dataset.act === "deny") return deny();
+    if (t.dataset.act === "rollback") return rollback();
+  });
+
+  render();
+  start("ssh");   /* open in a working state rather than an empty shell */
+})();
+</script>
+</body>
+</html>
