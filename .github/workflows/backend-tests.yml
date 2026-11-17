@@ -30,7 +30,7 @@ jobs:
         run: pipx install poetry
 
       - name: Cache Poetry virtualenv
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: aada-backend/.venv
           key: poetry-test-${{ runner.os }}-${{ hashFiles('aada-backend/poetry.lock') }}
@@ -68,7 +68,7 @@ jobs:
         run: pipx install poetry
 
       - name: Cache Poetry virtualenv
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: aada-backend/.venv
           key: poetry-lint-${{ runner.os }}-${{ hashFiles('aada-backend/poetry.lock') }}
